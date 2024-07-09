@@ -1,5 +1,5 @@
-import LandingPage from "./Pages/LandingPage/LandingPage"
-import { Button } from "./components/ui/button"
+import MainLayout from "./Layout/MainLayout/MainLayout"
+
 
 
 function App() {
@@ -7,9 +7,9 @@ function App() {
 
   return (
     <div>
-     <LandingPage />
+      <MainLayout />
     </div>
-  )
+  );
 }
 
 export default App
