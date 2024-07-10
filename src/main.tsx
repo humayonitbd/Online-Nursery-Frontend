@@ -8,10 +8,14 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import router from './routes/routes.tsx'
+  import { ToastContainer, toast } from "react-toastify";
+  import "react-toastify/dist/ReactToastify.css";
+
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <Provider store={store}>
+      <ToastContainer />
       <RouterProvider router={router} />
     </Provider>
   </React.StrictMode>
