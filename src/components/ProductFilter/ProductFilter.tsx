@@ -9,30 +9,36 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 
-
-const ProductSorting = ({ setSortingValue }: any) => {
-
-    const handleSorting = (value: string) => {
-      
-      setSortingValue(value);
-    };
+const ProductFilter = ({ setFilterValue }: any) => {
+  const handleFilter = (e: any) => {
+    const target = e.target as HTMLInputElement;
+    setFilterValue(target.value);
+  };
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button className="text-base bg-gradient-to-r from-[#76AE42] to-[#AFD136] text-white py-2 px-4 rounded hover:from-[#AFD136] hover:to-[#76AE42] transition-colors duration-300">
-          Sorting
+          Filter
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
-        <DropdownMenuLabel>Select Sorting Field</DropdownMenuLabel>
+        <DropdownMenuLabel className="text-center">
+          Price Range Filter
+        </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuRadioGroup onValueChange={handleSorting}>
-          <DropdownMenuRadioItem value="price">Price</DropdownMenuRadioItem>
-          <DropdownMenuRadioItem value="title">Name</DropdownMenuRadioItem>
-        </DropdownMenuRadioGroup>
+        <div className="py-5 px-3">
+          <input
+            onClick={handleFilter}
+            type="range"
+            min={50}
+            max="500"
+            // defaultValue={filterValue}
+            className="range range-md bg-[#76AE42] range-black"
+          />
+        </div>
       </DropdownMenuContent>
     </DropdownMenu>
   );
 };
 
-export default ProductSorting;
+export default ProductFilter;

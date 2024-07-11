@@ -26,27 +26,34 @@ const CategorySection = () => {
 
   return (
     <div className="py-10">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
-        {categories?.data?.map((category: TCategory, index: number) => (
-          <div key={category._id} className="relative">
-            <Link to={`/category/${category?._id}`}>
-              <div
-                className="h-60 bg-cover bg-center rounded-lg overflow-hidden"
-                style={{
-                  backgroundImage: `url(${
-                    categoryImages[index % categoryImages.length]
-                  })`,
-                }}
-              >
-                <div className="absolute inset-0 bg-gradient-to-r from-[#1f2937a3] to-[#2d3a4c7b] text-slate-100 py-2 px-4 rounded hover:from-[#afd136a3] hover:to-[#76ae42aa] transition-colors duration-300 bg-opacity-50 flex items-center justify-center">
-                  <div className=" text-center p-4">
-                    <div className="text-2xl font-bold">{category.name}</div>
+      <div>
+        <h2 className="text-3xl font-bold py-10 text-center text-slate-700">
+          Populler of our Category
+        </h2>
+      </div>
+      <div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
+          {categories?.data?.map((category: TCategory, index: number) => (
+            <div key={category._id} className="relative">
+              <Link to={`/category/${category?._id}`}>
+                <div
+                  className="h-60 bg-cover bg-center rounded-lg overflow-hidden"
+                  style={{
+                    backgroundImage: `url(${
+                      categoryImages[index % categoryImages.length]
+                    })`,
+                  }}
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-[#1f2937a3] to-[#2d3a4c7b] text-slate-100 py-2 px-4 rounded hover:from-[#afd136a3] hover:to-[#76ae42aa] transition-colors duration-300 bg-opacity-50 flex items-center justify-center">
+                    <div className=" text-center p-4">
+                      <div className="text-2xl font-bold">{category.name}</div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </Link>
-          </div>
-        ))}
+              </Link>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

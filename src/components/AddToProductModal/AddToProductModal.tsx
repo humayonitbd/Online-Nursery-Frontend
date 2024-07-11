@@ -66,8 +66,7 @@ const AddToProductModal = () => {
       brand: data.brand,
     };
 
-    console.log("productData", productData);
-    setIsOpen(false);
+   
     try {
       const res = await createProduct(productData).unwrap();
       if (res?.success) {
@@ -80,14 +79,16 @@ const AddToProductModal = () => {
         reset();
         setIsOpen(false); 
       }
-    } catch (error) {
-      console.log(error);
-      Swal.fire({
-        icon: "error",
-        title: "Product added Failed!!",
-        showConfirmButton: false,
-        timer: 1000,
-      });
+    } catch (error:any) {
+      if(error?.data?.success === false){
+        Swal.fire({
+          icon: "error",
+          title: error?.data?.message || "Product added Failed!!",
+          showConfirmButton: false,
+          timer: 1000,
+        });
+      }
+     
        setIsOpen(false); 
     }
   };

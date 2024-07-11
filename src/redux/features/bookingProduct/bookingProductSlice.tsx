@@ -10,7 +10,6 @@ type TInitialState = {
 };
 const initialState: TInitialState = {
   products: [],
-  
 };
 
 const bookingProductSlice = createSlice({
@@ -21,14 +20,15 @@ const bookingProductSlice = createSlice({
       state.products.push(action.payload);
     },
 
-    // deleteTodo: (state, action: PayloadAction<string>) => {
-    //   state.todos = state.todos.filter((item) => item._id !== action.payload);
-    //   state.filteredTodos = state.todos;
-    // },
+    deleteBookingProduct: (state, action: PayloadAction<string>) => {
+      state.products = state.products.filter(
+        (item) => item._id !== action.payload
+      );
+    
+    },
   },
 });
 
-export const { addBookingProduct } =
-  bookingProductSlice.actions;
+export const { addBookingProduct, deleteBookingProduct } = bookingProductSlice.actions;
 
 export default bookingProductSlice.reducer;

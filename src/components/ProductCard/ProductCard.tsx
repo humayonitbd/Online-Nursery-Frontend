@@ -5,12 +5,84 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Star } from "lucide-react";
 // import { RatingModal } from "../RatingModal/RatingMdal";
 import { TProduct } from "@/types";
 import { Button } from "@/components/ui/button";
+import { useAppDispatch } from "@/redux/hooks";
+import { addBookingProduct, deleteBookingProduct } from "@/redux/features/bookingProduct/bookingProductSlice";
+import Swal from "sweetalert2";
 const ProductCard = ({ product }: { product: TProduct }) => {
+ 
+  const location = useLocation();
+  console.log("current location", location.pathname);
+
+  const dispatch = useAppDispatch();
+
+  const addToCartHandler= async(product:TProduct)=>{
+
+    try {
+      const res = await dispatch(addBookingProduct(product));
+      
+      if (res) {
+        Swal.fire({
+          icon: "success",
+          title: "Add to Cart Successfull!!",
+          showConfirmButton: false,
+          timer: 1000,
+        });
+      }
+      
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Failed to Add to Cart",
+        showConfirmButton: false,
+        timer: 1000,
+      });
+    }
+
+    
+
+  }
+
+  const deleteToCartHandler = async (id: string) => {
+
+      try {
+        const result = await Swal.fire({
+          title: "Are you sure?",
+          text: "You won't be able to revert this!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes, delete it!",
+        });
+
+        if (result.isConfirmed) {
+          const res = await dispatch(deleteBookingProduct(id));
+          if (res) {
+            Swal.fire({
+              title: "Deleted!",
+              text: "Your Product has been deleted.",
+              icon: "success",
+            });
+          }
+        }
+      } catch (error) {
+        console.log(error);
+        Swal.fire({
+          title: "Error!",
+          text: "Failed to delete the product.",
+          icon: "error",
+        });
+      }
+
+    };
+    
+  
+
   return (
     <Card className="bg-gray-800 text-white rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300">
       <Link to={`/product/${product?._id}`}>
@@ -29,7 +101,8 @@ const ProductCard = ({ product }: { product: TProduct }) => {
             </div>
             <div>
               <p className="text-lg text-gray-400 font-bold">
-                Price: <span className="ml-1 text-slate-200">${product?.price}</span>
+                Price:{" "}
+                <span className="ml-1 text-slate-200">${product?.price}</span>
               </p>
             </div>
           </div>
@@ -43,9 +116,33 @@ const ProductCard = ({ product }: { product: TProduct }) => {
         </CardContent>
       </Link>
       <CardFooter className="p-4 border-t border-gray-700 ">
-        <Button className="w-full text-base bg-gradient-to-r from-[#76AE42] to-[#AFD136] text-white py-6 px-4 rounded hover:from-[#AFD136] hover:to-[#76AE42] transition-colors duration-300">
-          Add-to-Cart
-        </Button>
+        {location.pathname === "/product/add-to-cart-list" ? (
+          <>
+            <div className="flex justify-between items-center w-full">
+              <Button
+                onClick={() => deleteToCartHandler(product?._id)}
+                className=" text-base  text-white py-6 px-8 rounded outline outline-slate-200 "
+              >
+                Delete
+              </Button>
+              <Button
+                onClick={() => addToCartHandler(product)}
+                className=" text-base bg-gradient-to-r from-[#76AE42] to-[#AFD136] text-white py-6 px-4 rounded hover:from-[#AFD136] hover:to-[#76AE42] transition-colors duration-300"
+              >
+                Checkout to Prossed
+              </Button>
+            </div>
+          </>
+        ) : (
+          <>
+            <Button
+              onClick={() => addToCartHandler(product)}
+              className="w-full text-base bg-gradient-to-r from-[#76AE42] to-[#AFD136] text-white py-6 px-4 rounded hover:from-[#AFD136] hover:to-[#76AE42] transition-colors duration-300"
+            >
+              Add-to-Cart
+            </Button>
+          </>
+        )}
       </CardFooter>
     </Card>
   );

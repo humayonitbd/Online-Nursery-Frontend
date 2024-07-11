@@ -20,6 +20,7 @@ import Swal from "sweetalert2";
 
 const AddToCategory = () => {
     const { register, handleSubmit, reset } = useForm<Tdata>();
+    const [isOpen, setIsOpen] = useState(false);
 
     type Tdata = {
       name: string;
@@ -39,22 +40,26 @@ const AddToCategory = () => {
           timer: 1000,
         });
         reset();
+         setIsOpen(false);
        }
        
-    } catch (error) {
-        console.log(error);
-        Swal.fire({
-          icon: "error",
-          title: "Category Added Failed!!",
-          showConfirmButton: false,
-          timer: 1000,
-        });
+    } catch (error:any) {
+        if (error?.data?.success === false) {
+          Swal.fire({
+            icon: "error",
+            title: error?.data?.message || "Category Added Failed!!",
+            showConfirmButton: false,
+            timer: 1000,
+          });
+        }
+         setIsOpen(false);
+        
     }
       
 
     };
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button className="text-base bg-gradient-to-r from-[#76AE42] to-[#AFD136] text-white py-2 px-4 rounded hover:from-[#AFD136] hover:to-[#76AE42] transition-colors duration-300">
           Add-to-Category
@@ -69,8 +74,13 @@ const AddToCategory = () => {
             <div className="">
               <Label htmlFor="name" className="text-base ">
                 Category Name
-              </Label><br />
-              <Input {...register("name")} id="name" className="col-span-3 mt-2" />
+              </Label>
+              <br />
+              <Input
+                {...register("name", { required: "Name is required" })}
+                id="name"
+                className="col-span-3 mt-2"
+              />
             </div>
           </div>
           <div className="flex justify-end">
