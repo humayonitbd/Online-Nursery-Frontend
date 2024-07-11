@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import {
   Dialog,
@@ -8,11 +8,22 @@ import {
   DialogTrigger,
   DialogOverlay,
 } from "../ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import productApi from "@/redux/features/product/productApi";
 import Swal from "sweetalert2";
+import categoryApi from "@/redux/features/category/categoryApi";
+import { TCategory } from "@/types";
 
 export type TProductdata = {
   category: string;
@@ -26,7 +37,8 @@ export type TProductdata = {
 };
 
 const AddToProductModal = () => {
-  const { register, handleSubmit, reset } = useForm<TProductdata>();
+  const {control,register, handleSubmit, reset,formState: { errors } } = useForm<TProductdata>();
+  const {data:categorys} = categoryApi.useGetAllCategoryQuery(undefined);
   const [createProduct] = productApi.useCreateProductMutation();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -53,6 +65,9 @@ const AddToProductModal = () => {
       stock: stock,
       brand: data.brand,
     };
+
+    console.log("productData", productData);
+    setIsOpen(false);
     try {
       const res = await createProduct(productData).unwrap();
       if (res?.success) {
@@ -105,11 +120,35 @@ const AddToProductModal = () => {
               <Label htmlFor="category" className="text-base ">
                 Category Name
               </Label>
-              <br />
-              <Input
-                {...register("category", { required: "Category is required" })}
-                id="category"
-                className="col-span-3 mt-2"
+              <span className="block mb-1"></span>
+              <Controller
+                control={control}
+                name="category"
+                rules={{ required: "Category is required" }}
+                render={({ field }) => (
+                  <Select
+                    value={field.value}
+                    onValueChange={(value) => field.onChange(value)}
+                   
+                  >
+                    <SelectTrigger
+                      className={`${
+                        errors.category ? "border-black border-2" : ""
+                      }`}
+                    >
+                      <SelectValue placeholder="Select Your Category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        {categorys?.data?.map((category: TCategory) => (
+                          <SelectItem key={category.name} value={category.name}>
+                            {category.name}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                )}
               />
             </div>
             <div className="flex justify-between items-center">

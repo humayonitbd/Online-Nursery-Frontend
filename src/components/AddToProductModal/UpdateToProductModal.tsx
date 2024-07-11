@@ -1,4 +1,4 @@
-import { TProduct } from "@/types";
+import { TCategory, TProduct } from "@/types";
 import { Button } from "../ui/button";
 import {
   Dialog,
@@ -11,12 +11,22 @@ import {
   DialogOverlay,
   DialogClose,
 } from "../ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { SubmitHandler, useForm, Controller } from "react-hook-form";
 import productApi from "@/redux/features/product/productApi";
 import Swal from "sweetalert2";
 import { useState } from "react";
+import categoryApi from "@/redux/features/category/categoryApi";
 
 
 type TProductdata = {
@@ -33,21 +43,27 @@ type TProductdata = {
 const UpdateToProductModal = ({ product }:{product:TProduct}) => {
     const { _id:id,title:oldTitle, category:oldCategory, price:oldPrice, rating:oldRating, image:oldImage, description:oldDescription, stock:oldStock, brand:oldBrand } =
       product;
+      const { data: categorys } = categoryApi.useGetAllCategoryQuery(undefined);
 
       const [updateProduct] = productApi.useUpdateProductMutation();
 
       const [isOpen, setIsOpen] = useState(false);
-  const { register, handleSubmit, reset } = useForm<TProductdata>({
+  const {
+    control,
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<TProductdata>({
     defaultValues: {
-        title: oldTitle,
-        category: oldCategory,
-        price: oldPrice,
-        rating: oldRating,
-        image: oldImage,
-        description: oldDescription,
-        stock: oldStock,
-        brand: oldBrand,
-     
+      title: oldTitle,
+      category: oldCategory,
+      price: oldPrice,
+      rating: oldRating,
+      image: oldImage,
+      description: oldDescription,
+      stock: oldStock,
+      brand: oldBrand,
     },
   });
 
@@ -77,7 +93,6 @@ const UpdateToProductModal = ({ product }:{product:TProduct}) => {
       brand: data.brand || oldBrand,
     };
 
-    console.log("updateProductData", updateProductData);
     try {
        const res = await updateProduct({id, updateProductData }).unwrap();
       if (res.success) {
@@ -139,15 +154,35 @@ const UpdateToProductModal = ({ product }:{product:TProduct}) => {
                 className="col-span-3 mt-2"
               />
             </div>
+            
             <div className="">
               <Label htmlFor="category" className="text-base ">
                 Category Name
               </Label>
-              <br />
-              <Input
-                {...register("category")}
-                id="category"
-                className="col-span-3 mt-2"
+              <span className="block mb-1"></span>
+              <Controller
+                control={control}
+                name="category"
+                render={({ field }) => (
+                  <Select
+                    value={field.value}
+                    defaultValue={oldCategory ? oldCategory : ""}
+                    onValueChange={(value) => field.onChange(value)}
+                  >
+                    <SelectTrigger>
+                      <SelectValue defaultValue={oldCategory} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        {categorys?.data?.map((category: TCategory) => (
+                          <SelectItem key={category.name} value={category.name}>
+                            {category.name}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                )}
               />
             </div>
             <div className="flex justify-between items-center">

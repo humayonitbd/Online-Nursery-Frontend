@@ -1,5 +1,6 @@
 import MainLayout from "@/Layout/MainLayout/MainLayout";
 import ProductManagementLayout from "@/Layout/ProductManagmentLayout/ProductManagmentLayout";
+import CategoryByProduct from "@/Pages/CategoryByProduct/CategoryByProduct";
 import CategoryManagement from "@/Pages/CategoryManagement/CategoryManagement";
 import LandingPage from "@/Pages/LandingPage/LandingPage";
 import ProductDetails from "@/Pages/ProductDetails/ProductDetails";
@@ -20,6 +21,10 @@ const router = createBrowserRouter([
       {
         path: "product/:id",
         element: <ProductDetails />,
+      },
+      {
+        path: "category/:id",
+        element: <CategoryByProduct />,
       },
       {
         path: "product-category-management",

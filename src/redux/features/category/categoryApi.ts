@@ -18,6 +18,13 @@ const categoryApi = baseApi.injectEndpoints({
       }),
       providesTags: ["category"],
     }),
+    getSingleCategory: builder.query({
+      query: (id) => ({
+        url: `/category/${id}`,
+        method: "GET",
+      }),
+      providesTags: ["category"],
+    }),
 
     deleteCategory: builder.mutation({
       query: (id) => ({

@@ -24,19 +24,22 @@ const ProductCard = ({ product }: { product: TProduct }) => {
         <CardContent className="grid p-4">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-2">
-              <Star className="#EF4444" fill="#EF4444" />
+              <Star className="#EF4444" fill="#76AE42" />
               <p className="text-2xl font-bold">{product?.rating}</p>
             </div>
             <div>
-              <p className="text-lg text-red-500 font-bold">
-                $ {product?.price}
+              <p className="text-lg text-gray-400 font-bold">
+                Price: <span className="ml-1 text-slate-200">${product?.price}</span>
               </p>
             </div>
           </div>
-          <CardTitle className="mt-2 text-2xl font-bold">
-            {product?.title}
+          <CardTitle className="mt-2 text-xl font-semibold text-gray-400">
+            Title: <span className="text-slate-200">{product?.title}</span>
           </CardTitle>
-          <p className="text-lg mt-4 text-gray-400">{product?.category}</p>
+          <p className="text-md mt-4 text-gray-400">
+            Category:{" "}
+            <span className="text-slate-200">{product?.category}</span>
+          </p>
         </CardContent>
       </Link>
       <CardFooter className="p-4 border-t border-gray-700 ">

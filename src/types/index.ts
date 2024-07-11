@@ -12,3 +12,9 @@ export type TProduct = {
   brand: string;
   isDeleted?: boolean;
 };
+
+export type TCategory={
+  _id:string;
+  name:string;
+  isDeleted:boolean;
+}

@@ -11,11 +11,29 @@ const productApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["product"],
     }),
+    // getAllProduct: builder.query({
+    //   query: (categoryName) => {
+    //     console.log('categoryName', categoryName)
+    //     console.log(`{/product?category=${categoryName}}`)
+    //     return {
+    //       url: `/product?category=${categoryName}`,
+    //       method: "GET",
+    //     };
+    //   },
+    //   providesTags: ["product"],
+    // }),
     getAllProduct: builder.query({
-      query: () => ({
-        url: "/product",
-        method: "GET",
-      }),
+      query: (queryParams) => {
+        let url = "/product";
+        if (queryParams && Object.keys(queryParams).length > 0) {
+          const queryString = new URLSearchParams(queryParams).toString();
+          url = `/product?${queryString}`;
+        }
+        return {
+          url,
+          method: "GET",
+        };
+      },
       providesTags: ["product"],
     }),
     getSingleProduct: builder.query({

@@ -1,9 +1,9 @@
 import { NavLink } from "react-router-dom";
-import footerImage from "../../../assets/Online nursery Logo/logo.png";
+import footerImage from "../../../assets/Online nursery Logo/bg-remove-logo.png";
 const Footer = () => {
   return (
     <div>
-      <footer className="footer bg-base-200 text-base-content w-11/12 mx-auto p-10 mt-5">
+      <footer className="footer bg-[#1F2937] text-white w-11/12 mx-auto p-10 mt-5">
         <NavLink to="/">
           <img className="w-full h-20" src={footerImage} alt="Footer image" />
           <p>
