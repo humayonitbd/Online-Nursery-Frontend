@@ -2,6 +2,7 @@
 
 export type TProduct = {
   _id: string;
+  quantity?:number;
   category: string;
   title: string;
   price: number;

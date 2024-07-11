@@ -6,6 +6,7 @@ import CategoryManagement from "@/Pages/CategoryManagement/CategoryManagement";
 import LandingPage from "@/Pages/LandingPage/LandingPage";
 import ProductDetails from "@/Pages/ProductDetails/ProductDetails";
 import ProductManagement from "@/Pages/ProductManagement/ProductManagement";
+import ProductPayment from "@/Pages/ProductPayment/ProductPayment";
 import ErrorPage from "@/Pages/SharedPage/ErrorPage/ErrorPage";
 import { createBrowserRouter } from "react-router-dom";
 
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
       {
         path: "product/add-to-cart-list",
         element: <CartListPage />,
+      },
+      {
+        path: "product/add-to-cart-list/payment/:id",
+        element: <ProductPayment />,
       },
       {
         path: "product-category-management",

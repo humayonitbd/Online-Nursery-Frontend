@@ -82,7 +82,6 @@ const ProductCard = ({ product }: { product: TProduct }) => {
     };
     
   
-
   return (
     <Card className="bg-gray-800 text-white rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300">
       <Link to={`/product/${product?._id}`}>
@@ -125,12 +124,11 @@ const ProductCard = ({ product }: { product: TProduct }) => {
               >
                 Delete
               </Button>
-              <Button
-                onClick={() => addToCartHandler(product)}
-                className=" text-base bg-gradient-to-r from-[#76AE42] to-[#AFD136] text-white py-6 px-4 rounded hover:from-[#AFD136] hover:to-[#76AE42] transition-colors duration-300"
-              >
-                Checkout to Prossed
-              </Button>
+              <Link to={`/product/add-to-cart-list/payment/${product?._id}`}>
+                <Button className=" text-base bg-gradient-to-r from-[#76AE42] to-[#AFD136] text-white py-6 px-4 rounded hover:from-[#AFD136] hover:to-[#76AE42] transition-colors duration-300">
+                  Checkout to Prossed
+                </Button>
+              </Link>
             </div>
           </>
         ) : (
