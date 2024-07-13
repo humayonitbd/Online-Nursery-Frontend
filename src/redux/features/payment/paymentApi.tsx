@@ -11,6 +11,14 @@ const paymentApi = baseApi.injectEndpoints({
         body: data,
       }),
     }),
+
+    productBookingPayment: builder.mutation({
+      query: (payment) => ({
+        url: "/booking/booking-payment",
+        method: "POST",
+        body: payment,
+      }),
+    }),
   }),
 });
 

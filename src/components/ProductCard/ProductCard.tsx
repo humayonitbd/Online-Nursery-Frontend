@@ -85,12 +85,17 @@ const ProductCard = ({ product }: { product: TProduct }) => {
   return (
     <Card className="bg-gray-800 text-white rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300">
       <Link to={`/product/${product?._id}`}>
-        <CardHeader className="p-2">
+        <CardHeader className="p-2 relative ">
           <img
             src={product?.image}
             className="h-[300px] w-full object-cover rounded-t-lg transition-transform duration-300 hover:scale-105"
             alt={product?.title}
           />
+          {location.pathname === "/product/add-to-cart-list" && (
+            <span className="absolute top-2 right-3 bg-[#141d0b] bg-opacity-100 text-white px-4 py-2 rounded-full">
+              {product?.quantity}
+            </span>
+          )}
         </CardHeader>
         <CardContent className="grid p-4">
           <div className="flex justify-between items-center">

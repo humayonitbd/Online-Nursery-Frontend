@@ -19,3 +19,13 @@ export type TCategory={
   name:string;
   isDeleted:boolean;
 }
+
+export type TPaymentData = {
+  orderProductTitle: string;
+  orderProductPrice: number;
+  orderProductCategory: string;
+  orderProductQuantity?: number;
+  transactionId: number | string;
+  userEmail: string;
+  orderProductId: string;
+};

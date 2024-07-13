@@ -5,12 +5,16 @@ import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import CheckoutForm from "./CheckoutForm";
 import { useEffect, useState } from "react";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+
+import { TProduct } from "@/types";
+import { RootState } from "@/redux/store";
 
 
 // const stripePromise = loadStripe('process.env.REACT_APP_STRIP_KEY');
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
-console.log("stripePromise", stripePromise);
+
 
 const ProductPayment = () => {
     const {id} = useParams();
@@ -24,11 +28,14 @@ const ProductPayment = () => {
       userEmail,
       userAddress
     }
-    const {data, isLoading} = productApi.useGetSingleProductQuery(id);
-    const paymentProduct = data?.data;
-
-    console.log('userData',userData)
-
+    // const {data, isLoading} = productApi.useGetSingleProductQuery(id);
+    const stateDatas = useAppSelector(
+      (state: RootState) => state.products.products
+    );
+    const paymentProduct = stateDatas.find((data:TProduct) => data._id === id);
+      // const paymentProductState = dispatch(singleBookingProduct(id));
+    console.log("paymentProductState", paymentProduct);
+    
     useEffect(() => {
       // Check if all fields are filled
       if (userName && userEmail && userAddress) {
@@ -38,10 +45,10 @@ const ProductPayment = () => {
       }
     }, [userName, userEmail, userAddress]);
 
-    if(isLoading){
-        return <SmallLoading />
+    if (!paymentProduct) {
+      return <div className="text-center text-red-500 font-semibold text-2xl my-60">Product not found</div>;
     }
-
+    
     return (
       <div className="py-10 w-11/12 mx-auto">
         <div className="px-4 md:px-32 lg:px-80 bg-gray-700 py-10 md:py-20">
@@ -53,8 +60,8 @@ const ProductPayment = () => {
               <div>
                 <img
                   className="w-60 rounded-md mr-5"
-                  src={data?.data?.image}
-                  alt={data?.data?.title}
+                  src={paymentProduct?.image}
+                  alt={paymentProduct?.title}
                 />
               </div>
               <div>
@@ -72,6 +79,14 @@ const ProductPayment = () => {
                   </span>
                   <span className="text-slate-200 text-lg font-semibold">
                     {paymentProduct?.category}
+                  </span>
+                </p>
+                <p>
+                  <span className="text-lg font-semibold text-slate-800 mr-2">
+                    Quantity:
+                  </span>
+                  <span className="text-slate-200 text-lg font-semibold">
+                    {paymentProduct?.quantity}
                   </span>
                 </p>
                 <p>

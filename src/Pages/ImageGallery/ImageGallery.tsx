@@ -59,7 +59,7 @@ const ImageGallery = () => {
   const images = [img1, img2, img3, img4, img5, img6, img7, img8, img9, img10];
 
   return (
-    <div className="pt-5 pb-10 ">
+    <div id="gallerySec" className="pt-5 pb-10 ">
       <h2 className="text-3xl font-bold mb-6 text-center text-slate-700">
         Gallery of our products
       </h2>

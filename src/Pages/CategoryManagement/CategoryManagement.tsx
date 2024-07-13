@@ -93,7 +93,7 @@ const CategoryManagement = () => {
                   <UpdateCategoryModal category={category} />
                   <Button
                     onClick={()=>handleDeleteCategory(category?._id)}
-                    className="text-base bg-red-500 ml-3"
+                    className="text-base text-slate-200 bg-gray-700 ml-3"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"

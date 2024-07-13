@@ -24,10 +24,12 @@ const productApi = baseApi.injectEndpoints({
     // }),
     getAllProduct: builder.query({
       query: (queryParams) => {
+        console.log()
         let url = "/product";
         if (queryParams && Object.keys(queryParams).length > 0) {
           const queryString = new URLSearchParams(queryParams).toString();
           url = `/product?${queryString}`;
+
         }
         return {
           url,

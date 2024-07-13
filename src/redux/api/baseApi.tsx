@@ -5,7 +5,7 @@ import {
 export const baseApi = createApi({
   reducerPath: "baseApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:5000/api/v1",
+    baseUrl: "https://online-nursery-backend.vercel.app/api/v1",
   }),
   tagTypes: ["category", "product"],
   endpoints: () => ({}),

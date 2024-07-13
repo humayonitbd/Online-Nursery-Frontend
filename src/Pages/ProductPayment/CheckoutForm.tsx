@@ -1,34 +1,40 @@
-
 import { Button } from "@/components/ui/button";
+import { deletePaymentBookingProduct } from "@/redux/features/bookingProduct/bookingProductSlice";
 import paymentApi from "@/redux/features/payment/paymentApi";
+import { useAppDispatch } from "@/redux/hooks";
 import { TProduct } from "@/types";
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { useEffect, useState } from "react";
 import { FieldValues } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const CheckoutForm = ({
   paymentProduct,
   userData,
 }: {
   paymentProduct: TProduct;
-  userData:{userName:string; userEmail:string;userAddress:string;}
+  userData: { userName: string; userEmail: string; userAddress: string };
 }) => {
   const [cardError, setCardError] = useState("");
   const [clientSecret, setClientSecret] = useState("");
   const [transactionId, setTransactionId] = useState("");
-  const [proccessing, setProccessing] = useState(false);
-  const navigete = useNavigate();
+  const [processing, setProcessing] = useState(false);
+  const dispatch = useAppDispatch();
+  
+  const navigate = useNavigate();
   const { price, title, _id, category, quantity } = paymentProduct;
   const stripe = useStripe();
   const elements = useElements();
 
-  const [createpaymentSecret] = paymentApi.useCreatePaymentSecretMutation();
+  const [createPaymentSecret] = paymentApi.useCreatePaymentSecretMutation();
+  const [paymentBooking] = paymentApi.useProductBookingPaymentMutation();
+
   useEffect(() => {
     const fetchPaymentSecret = async () => {
       try {
         if (price) {
-          const res = await createpaymentSecret({ price }).unwrap();
+          const res = await createPaymentSecret({ price }).unwrap();
           const secret = res?.data?.clientSecret;
           setClientSecret(secret);
         }
@@ -37,9 +43,49 @@ const CheckoutForm = ({
       }
     };
     fetchPaymentSecret();
-  }, [price, createpaymentSecret]);
+  }, [price, createPaymentSecret]);
 
-  const handleSubmit = async (e: FieldValues) => {
+  const fetchPaymentBooking = async (payment: any) => {
+    try {
+      const res = await paymentBooking(payment).unwrap();
+      if (res.success) {
+        Swal.fire({
+          icon: "success",
+          title: res.message || "Product Payment Successful!!",
+          showConfirmButton: false,
+          timer: 1000,
+        });
+        dispatch(deletePaymentBookingProduct(_id));
+        navigate("/"); 
+      }
+    } catch (error: any) {
+      if (error.response && error.response.data) {
+        if (error.response.data.message === "Product is out of stock!") {
+          Swal.fire({
+            title: "Error!",
+            text: "Product is out of stock!",
+            icon: "error",
+          });
+        } else {
+          Swal.fire({
+            title: "Error!",
+            text:
+              error.response.data.message ||
+              "Occurred Processing And Stock Out Product",
+            icon: "error",
+          });
+        }
+      } else {
+        Swal.fire({
+          title: "Error!",
+          text: "Occurred Processing And Stock Out Product",
+          icon: "error",
+        });
+      }
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!stripe || !elements) {
@@ -48,7 +94,8 @@ const CheckoutForm = ({
 
     const card = elements.getElement(CardElement);
 
-    if (card == null) {
+    if (!card) {
+      setCardError("Card information is not available.");
       return;
     }
 
@@ -59,11 +106,14 @@ const CheckoutForm = ({
 
     if (error) {
       setCardError(error?.message as string);
+      return;
     } else {
       setCardError("");
     }
-    // setProccessing(true);
-    const { paymentIntent, error: confromError } =
+
+    setProcessing(true);
+
+    const { paymentIntent, error: confirmError } =
       await stripe.confirmCardPayment(clientSecret, {
         payment_method: {
           card: card,
@@ -73,46 +123,34 @@ const CheckoutForm = ({
           },
         },
       });
-    if (confromError) {
-      setCardError(confromError.message as string);
+
+    if (confirmError) {
+      setCardError(confirmError.message as string);
+      setProcessing(false);
       return;
     }
-    if (paymentIntent.status === "succeeded") {
+
+    if (paymentIntent?.status === "succeeded") {
       const payment = {
-        orderProductTitle:title,
-        orderProductPrice:price,
-        orderProductCategory:category,
-        orderProductQuantity:quantity,
+        orderProductTitle: title,
+        orderProductPrice: price,
+        orderProductCategory: category,
+        orderProductQuantity: quantity,
         transactionId: paymentIntent.id,
-        userEmail:userData.userEmail,
+        userEmail: userData.userEmail,
         orderProductId: _id,
       };
 
-    //   console.log(payment);
-    //   fetch("https://resale-market-server-taupe.vercel.app/payments", {
-    //     method: "POST",
-    //     headers: {
-    //       "content-type": "application/json",
-    //       authorization: `bearer ${localStorage.getItem("accessToken")}`,
-    //     },
-    //     body: JSON.stringify(payment),
-    //   })
-    //     .then((res) => res.json())
-    //     .then((data) => {
-    //       if (data.insertedId) {
-    //         setTransactionId(paymentIntent.id);
-    //         toast.success("Congrats ! your payment successfull");
-    //         navigete("/dashboard/myorders");
-    //       }
-    //     });
-    // }
-    // setProccessing(false);
-    // console.log("payment message", paymentIntent);
+      await fetchPaymentBooking(payment);
+      setTransactionId(paymentIntent.id);
+    }
+
+    setProcessing(false);
   };
-}
+
   return (
     <form
-      className="w-full  bg-slate-200 p-3 mt-5 rounded"
+      className="w-full bg-slate-200 p-3 mt-5 rounded"
       onSubmit={handleSubmit}
     >
       <CardElement
@@ -131,27 +169,17 @@ const CheckoutForm = ({
           },
         }}
       />
-      {/* <button
-        type="submit"
-        className="w-full border-none  bg-orange-500 btn mt-5"
-        // disabled={!stripe || !clientSecret || proccessing}
-      >
-        Pay
-      </button> */}
       <Button
         type="submit"
-        disabled={!stripe || !clientSecret || proccessing}
+        disabled={!stripe || !clientSecret || processing}
         className="w-full mt-5 text-lg font-bold bg-gradient-to-r from-[#76AE42] to-[#AFD136] text-white py-6 px-4 rounded hover:from-[#AFD136] hover:to-[#76AE42] transition-colors duration-300"
       >
         Pay
       </Button>
       <p className="text-orange-500">{cardError}</p>
-
-      {transactionId && (
-        <p className="text-orange-500">TransactionId: {transactionId}</p>
-      )}
+      
     </form>
   );
 };
 
-export default CheckoutForm ;
+export default CheckoutForm;

@@ -3,20 +3,17 @@ import { useAppSelector } from "@/redux/hooks";
 import { NavLink } from "react-router-dom";
 
 const Navbar = () => {
-
   const cartItem = useAppSelector((state) => state.products.products);
-  // console.log("header cartItem", cartItem)
-
 
   return (
-    <div className="   ">
+    <div>
       <div className="navbar w-11/12 mx-auto border-b-2 bg-white">
         <div className="navbar-start">
           <div className="dropdown">
             <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
+                className="h-10 w-10 bg-gradient-to-r from-[#76AE42] to-[#AFD136] text-white rounded hover:from-[#AFD136] hover:to-[#76AE42] transition-colors duration-300"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -33,9 +30,40 @@ const Navbar = () => {
               tabIndex={0}
               className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
             >
-              <li>
-                <NavLink to="home">
-                  <a>Home</a>
+              <li className="mr-2">
+                <NavLink
+                  className={({ isActive }) =>
+                    isActive
+                      ? "font-medium text-base text-slate-700  rounded-none border-b-2 border-[#76AE42]"
+                      : "font-medium text-base text-slate-700 btn-none "
+                  }
+                  to="/"
+                >
+                  Home
+                </NavLink>
+              </li>
+              <li className="mr-2">
+                <NavLink
+                  className={({ isActive }) =>
+                    isActive
+                      ? "font-medium text-base text-slate-700 rounded-none border-b-2 border-[#76AE42]"
+                      : "font-medium text-base text-slate-700 btn-none"
+                  }
+                  to="/product-category-management"
+                >
+                  Product Management
+                </NavLink>
+              </li>
+              <li className="mr-2">
+                <NavLink
+                  className={({ isActive }) =>
+                    isActive
+                      ? "font-medium text-base text-slate-700 rounded-none border-b-2 border-[#76AE42]"
+                      : "font-medium text-base text-slate-700 btn-none"
+                  }
+                  to="/all-product-list"
+                >
+                  Products
                 </NavLink>
               </li>
             </ul>
@@ -53,24 +81,39 @@ const Navbar = () => {
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1">
             <li className="mr-2">
-              <NavLink className="font-medium text-base  text-slate-700" to="/">
+              <NavLink
+                className={({ isActive }) =>
+                  isActive
+                    ? "font-medium text-base text-slate-700  rounded-none border-b-2 border-[#76AE42]"
+                    : "font-medium text-base text-slate-700 btn-none "
+                }
+                to="/"
+              >
                 Home
               </NavLink>
             </li>
             <li className="mr-2">
               <NavLink
-                className="font-medium text-base text-slate-700"
+                className={({ isActive }) =>
+                  isActive
+                    ? "font-medium text-base text-slate-700 rounded-none border-b-2 border-[#76AE42]"
+                    : "font-medium text-base text-slate-700 btn-none"
+                }
                 to="/product-category-management"
               >
-                Product Managment
+                Product Management
               </NavLink>
             </li>
-            <li>
+            <li className="mr-2">
               <NavLink
-                className="font-medium text-base text-slate-700"
-                to="/contact"
+                className={({ isActive }) =>
+                  isActive
+                    ? "font-medium text-base text-slate-700 rounded-none border-b-2 border-[#76AE42]"
+                    : "font-medium text-base text-slate-700 btn-none"
+                }
+                to="/all-product-list"
               >
-                Contact
+                Products
               </NavLink>
             </li>
           </ul>

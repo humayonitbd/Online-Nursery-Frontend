@@ -14,45 +14,40 @@ const Footer = () => {
         </NavLink>
         <nav>
           <h6 className="footer-title">Services</h6>
-          <NavLink to="/" className="link link-hover">
-            Branding
-          </NavLink>
-          <NavLink to="/" className="link link-hover">
-            Design
-          </NavLink>
-          <NavLink to="/" className="link link-hover">
-            Marketing
-          </NavLink>
-          <NavLink to="/" className="link link-hover">
-            Advertisement
-          </NavLink>
+          <a href="#productSec" className="link link-hover">
+            Products
+          </a>
+          <a href="#gallerySec" className="link link-hover">
+            Gallery
+          </a>
+          <a href="#categorySec" className="link link-hover">
+            Category
+          </a>
+          <a href="#productSec" className="link link-hover">
+            Populler
+          </a>
         </nav>
         <nav>
-          <h6 className="footer-title">Company</h6>
-          <NavLink to="/" className="link link-hover">
-            About us
-          </NavLink>
-          <NavLink to="/" className="link link-hover">
-            Contact
-          </NavLink>
-          <NavLink to="/" className="link link-hover">
-            Jobs
-          </NavLink>
-          <NavLink to="/" className="link link-hover">
-            Press kit
-          </NavLink>
-        </nav>
-        <nav>
-          <h6 className="footer-title">Legal</h6>
-          <NavLink to="/" className="link link-hover">
-            Terms of use
-          </NavLink>
-          <NavLink to="/" className="link link-hover">
-            Privacy policy
-          </NavLink>
-          <NavLink to="/" className="link link-hover">
-            Cookie policy
-          </NavLink>
+          <h6 className="footer-title">Company Management</h6>
+          <a
+            href="product-category-management/product-management"
+            className="link link-hover"
+          >
+            Product Management
+          </a>
+          <a
+            href="product-category-management/category-management"
+            className="link link-hover"
+          >
+            Category Management
+          </a>
+          <a href="product/add-to-cart-list" className="link link-hover">
+            shopping Page
+          </a>
+
+          <a href="#categorySec" className="link link-hover">
+            Populler Category
+          </a>
         </nav>
       </footer>
     </div>

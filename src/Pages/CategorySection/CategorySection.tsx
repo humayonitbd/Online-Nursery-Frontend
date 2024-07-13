@@ -25,7 +25,7 @@ const CategorySection = () => {
   const categoryImages = [ img2,img5, img1];
 
   return (
-    <div className="py-10">
+    <div id="categorySec" className="py-10">
       <div>
         <h2 className="text-3xl font-bold py-10 text-center text-slate-700">
           Populler of our Category

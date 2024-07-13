@@ -1,10 +1,11 @@
 import ProductCard from "@/components/ProductCard/ProductCard";
 import { useAppSelector } from "@/redux/hooks";
 import { TProduct } from "@/types";
-import { useLocation } from "react-router-dom";
+
 
 const CartListPage = () => {
     const products = useAppSelector((state) => state.products.products);
+  
     
     return (
       <div>

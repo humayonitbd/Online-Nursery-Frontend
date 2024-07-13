@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 
-const ProductFilter = ({ setFilterValue }: any) => {
+const ProductFilter = ({ setFilterValue, filterValue }: any) => {
   const handleFilter = (e: any) => {
     const target = e.target as HTMLInputElement;
     setFilterValue(target.value);
@@ -23,7 +23,7 @@ const ProductFilter = ({ setFilterValue }: any) => {
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
         <DropdownMenuLabel className="text-center">
-          Price Range Filter
+          Price Range Filter- {filterValue} - {Number(filterValue) + 100}
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <div className="py-5 px-3">
@@ -32,7 +32,7 @@ const ProductFilter = ({ setFilterValue }: any) => {
             type="range"
             min={50}
             max="500"
-            // defaultValue={filterValue}
+            defaultValue={filterValue}
             className="range range-md bg-[#76AE42] range-black"
           />
         </div>
