@@ -5,6 +5,8 @@ import CartListPage from "@/Pages/CartListPage/CartListPage";
 import CategoryByProduct from "@/Pages/CategoryByProduct/CategoryByProduct";
 import CategoryManagement from "@/Pages/CategoryManagement/CategoryManagement";
 import LandingPage from "@/Pages/LandingPage/LandingPage";
+import Login from "@/Pages/Login/Login/Login";
+import Register from "@/Pages/Login/Register/Register";
 import ProductDetails from "@/Pages/ProductDetails/ProductDetails";
 import ProductManagement from "@/Pages/ProductManagement/ProductManagement";
 import ProductPayment from "@/Pages/ProductPayment/ProductPayment";
@@ -58,6 +60,14 @@ const router = createBrowserRouter([
             element: <CategoryManagement />,
           },
         ],
+      },
+      {
+        path: "login",
+        element: <Login />,
+      },
+      {
+        path: "register",
+        element: <Register />,
       },
     ],
   },

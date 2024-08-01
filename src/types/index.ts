@@ -29,3 +29,10 @@ export type TPaymentData = {
   userEmail: string;
   orderProductId: string;
 };
+
+export type QueryParams = {
+  searchTerm?: string;
+  price?: number | string;
+  category?: string;
+  sort?: string | number;
+};

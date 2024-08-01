@@ -1,6 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { useAppSelector } from "@/redux/hooks";
 import { NavLink } from "react-router-dom";
+import logo from "../../../assets/Online nursery Logo/logo.png";
+import { FaUserCircle } from "react-icons/fa";
 
 const Navbar = () => {
   const cartItem = useAppSelector((state) => state.products.products);
@@ -70,11 +72,7 @@ const Navbar = () => {
           </div>
           <NavLink to="/">
             <div>
-              <img
-                className="w-full h-20"
-                src="/src/assets/Online nursery Logo/logo.png"
-                alt="logo"
-              />
+              <img className="w-full h-20" src={logo} alt="logo" />
             </div>
           </NavLink>
         </div>
@@ -116,6 +114,18 @@ const Navbar = () => {
                 Products
               </NavLink>
             </li>
+            <li className="mr-2">
+              <NavLink
+                className={({ isActive }) =>
+                  isActive
+                    ? "font-medium text-base text-slate-700 rounded-none border-b-2 border-[#76AE42]"
+                    : "font-medium text-base text-slate-700 btn-none"
+                }
+                to="/login"
+              >
+                Login
+              </NavLink>
+            </li>
           </ul>
         </div>
         <div className="navbar-end">
@@ -142,6 +152,11 @@ const Navbar = () => {
                 Cart
               </Button>
             </NavLink>
+          </div>
+          <div className="ml-5 md:ml-8">
+            <span>
+              <FaUserCircle className="h-8 w-8 text-gray-800" />
+            </span>
           </div>
 
           <label htmlFor="my-drawer-2" className=" lg:hidden ml-2">

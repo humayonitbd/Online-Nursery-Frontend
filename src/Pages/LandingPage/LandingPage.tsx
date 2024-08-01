@@ -3,6 +3,8 @@ import HeroSection from "@/components/HeroSection/HeroSection";
 import Products from "../Products/Products";
 import ImageGallery from "../ImageGallery/ImageGallery";
 import CategorySection from "../CategorySection/CategorySection";
+import HousePlantSec from "../HousePlantSec/HousePlantSec";
+import ClientSay from "../ClientSay/ClientSay";
 
 
 const LandingPage = () => {
@@ -12,6 +14,8 @@ const LandingPage = () => {
           <CategorySection />
             <Products />
             <ImageGallery />
+            <HousePlantSec />
+            <ClientSay />
         </div>
     );
 };

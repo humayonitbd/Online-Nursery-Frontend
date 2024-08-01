@@ -1,21 +1,17 @@
-import { FormEvent, useState } from "react";
+import {  useState } from "react";
 import { Button } from "../ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogOverlay,
   DialogClose,
 } from "../ui/dialog";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { useForm, SubmitHandler } from "react-hook-form";
 import categoryApi from "@/redux/features/category/categoryApi";
-import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 
 const AddToCategory = () => {

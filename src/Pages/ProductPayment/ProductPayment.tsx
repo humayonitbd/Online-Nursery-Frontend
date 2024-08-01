@@ -1,11 +1,11 @@
-import productApi from "@/redux/features/product/productApi";
+
 import { useParams } from "react-router-dom";
-import SmallLoading from "../SharedPage/Loading/SmallLoading";
+
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import CheckoutForm from "./CheckoutForm";
 import { useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { useAppSelector } from "@/redux/hooks";
 
 import { TProduct } from "@/types";
 import { RootState } from "@/redux/store";

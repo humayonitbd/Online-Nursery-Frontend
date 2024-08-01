@@ -3,10 +3,8 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuLabel,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
 } from "../ui/dropdown-menu";
 
 const ProductFilter = ({ setFilterValue, filterValue }: any) => {

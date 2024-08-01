@@ -2,8 +2,6 @@ import AddToCategory from "@/components/AddToCategory/AddToCategory";
 import { Button } from "@/components/ui/button";
 import categoryApi from "@/redux/features/category/categoryApi";
 import SmallLoading from "../SharedPage/Loading/SmallLoading";
-import { useAppDispatch } from "@/redux/hooks";
-import { toast } from "react-toastify";
 import UpdateCategoryModal from "@/components/AddToCategory/UpdateCategoryModal";
 import Swal from "sweetalert2";
 

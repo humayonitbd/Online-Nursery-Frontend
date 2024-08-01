@@ -5,7 +5,7 @@ import { useAppDispatch } from "@/redux/hooks";
 import { TProduct } from "@/types";
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { useEffect, useState } from "react";
-import { FieldValues } from "react-hook-form";
+
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
@@ -18,7 +18,6 @@ const CheckoutForm = ({
 }) => {
   const [cardError, setCardError] = useState("");
   const [clientSecret, setClientSecret] = useState("");
-  const [transactionId, setTransactionId] = useState("");
   const [processing, setProcessing] = useState(false);
   const dispatch = useAppDispatch();
   
@@ -99,7 +98,7 @@ const CheckoutForm = ({
       return;
     }
 
-    const { error, paymentMethod } = await stripe.createPaymentMethod({
+    const { error } = await stripe.createPaymentMethod({
       type: "card",
       card,
     });
@@ -142,7 +141,7 @@ const CheckoutForm = ({
       };
 
       await fetchPaymentBooking(payment);
-      setTransactionId(paymentIntent.id);
+      
     }
 
     setProcessing(false);

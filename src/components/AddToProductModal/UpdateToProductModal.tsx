@@ -3,12 +3,11 @@ import { Button } from "../ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogFooter,
+
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogOverlay,
+ 
   DialogClose,
 } from "../ui/dialog";
 import {
@@ -16,7 +15,7 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
+ 
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -52,8 +51,7 @@ const UpdateToProductModal = ({ product }:{product:TProduct}) => {
     control,
     register,
     handleSubmit,
-    reset,
-    formState: { errors },
+    reset
   } = useForm<TProductdata>({
     defaultValues: {
       title: oldTitle,

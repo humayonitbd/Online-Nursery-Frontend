@@ -1,6 +1,5 @@
 import { Button } from '@/components/ui/button';
 import productApi from '@/redux/features/product/productApi';
-import React from 'react';
 import { useParams } from 'react-router-dom';
 import SmallLoading from '../SharedPage/Loading/SmallLoading';
 

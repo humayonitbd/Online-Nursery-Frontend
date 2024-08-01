@@ -1,7 +1,7 @@
 import ProductCard from "@/components/ProductCard/ProductCard";
 import productApi from "@/redux/features/product/productApi";
 import SmallLoading from "../SharedPage/Loading/SmallLoading";
-import { TProduct } from "@/types";
+import { TProduct, QueryParams } from "@/types";
 import { useEffect, useState } from "react";
 import ProductSorting from "@/components/ProductSorting/ProductSorting";
 import ProductFilter from "@/components/ProductFilter/ProductFilter";
@@ -14,8 +14,8 @@ const [searchTerm, setSearchTerm] = useState<string>("");
 const [debouncedValue, setDebouncedValue] = useState<string>("");
 const [queryParams, setQueryParams] = useState<QueryParams>({});
 
-console.log(sortingValue, filterValue, searchTerm,)
-console.log('queryParams',queryParams)
+// console.log(sortingValue, filterValue, searchTerm,)
+// console.log('queryParams',queryParams)
 // Function to debounce API call
 const debouncedSearch = debounce((term: string) => {
   setDebouncedValue(term);

@@ -6,8 +6,7 @@ import { TCategory } from "@/types";
 // Import your category images
 import img1 from "../../assets/HeroSecImg/1.jpg";
 import img2 from "../../assets/HeroSecImg/2.jpg";
-import img3 from "../../assets/HeroSecImg/3.jpg";
-import img4 from "../../assets/HeroSecImg/4.jpg";
+
 import img5 from "../../assets/HeroSecImg/5.jpg";
 import { Link } from "react-router-dom";
 
