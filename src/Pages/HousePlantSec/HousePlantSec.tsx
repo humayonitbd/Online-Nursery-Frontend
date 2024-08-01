@@ -1,22 +1,32 @@
 import { Button } from "@/components/ui/button";
-import homeSec from "../../assets/HeroSecImg/house plant.jpg";
+import housePlant1 from "../../assets/HeroSecImg/house plant.jpg";
+import housePlant2 from "../../assets/HeroSecImg/house plant 2.jpg";
 import { NavLink } from "react-router-dom";
 const HousePlantSec = () => {
     return (
       <div className="py-10 bg-white ">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 ">
-          <div>
-            <img className="w-full h-96" src={homeSec} alt="" />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-20 ">
+          <div className="grid grid-cols-2 gap-2">
+            <img className="w-full h-96" src={housePlant1} alt="housePlant1" />
+            <img className="w-full h-96" src={housePlant2} alt="housePlant2" />
           </div>
-          <div className="flex justify-start items-center">
+          <div className="flex justify-start items-start">
             <div>
-              <h3 className="text-3xl font-bold text-gray-700 ">Populler House Plant.</h3>
-              <p className="text-gray-600 my-5">
+              <h3 className="text-3xl font-bold text-gray-700 ">
+                Populler House Plant.
+              </h3>
+              <p className="text-gray-600 text-lg my-5">
                 The most common are exotic plants native to warm, frost-free
                 parts of the world that can be grown indoors in colder climates
                 in portable containers or miniature gardens. Most houseplants
                 are, therefore, derived from plants native to the tropics and
                 near tropics.
+              </p>
+              <p className="text-gray-600 text-lg my-5">
+                The House Plant is the most populer plant in the bangla desh.Frost-free
+                parts of the world that can be grown indoors in colder climates
+                in portable containers or miniature gardens. Most houseplants
+                are, therefore.
               </p>
               <NavLink to="/all-product-list">
                 <Button className="text-base bg-gradient-to-r from-[#76AE42] to-[#AFD136] text-white py-2 px-4 rounded hover:from-[#AFD136] hover:to-[#76AE42] transition-colors duration-300">

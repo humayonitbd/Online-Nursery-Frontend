@@ -3,9 +3,24 @@ import { useAppSelector } from "@/redux/hooks";
 import { NavLink } from "react-router-dom";
 import logo from "../../../assets/Online nursery Logo/logo.png";
 import { FaUserCircle } from "react-icons/fa";
+import Swal from "sweetalert2";
 
 const Navbar = () => {
   const cartItem = useAppSelector((state) => state.products.products);
+  const user = useAppSelector((state) => state.auth.user);
+  console.log("user", user);
+
+  const logOuthandler = ()=>{
+    if(!user?.email){
+      Swal.fire({
+        icon: "error",
+        title: "Please login your account!!",
+        showConfirmButton: false,
+        timer: 1000,
+      });
+      return;
+    }
+  }
 
   return (
     <div>
@@ -153,10 +168,66 @@ const Navbar = () => {
               </Button>
             </NavLink>
           </div>
-          <div className="ml-5 md:ml-8">
-            <span>
-              <FaUserCircle className="h-8 w-8 text-gray-800" />
-            </span>
+
+          <div className="dropdown dropdown-end">
+            <div tabIndex={0} role="button" className="">
+              <div className="ml-5 md:ml-8">
+                <span>
+                  <FaUserCircle className="h-9 w-9 text-gray-800" />
+                </span>
+              </div>
+            </div>
+            <ul
+              tabIndex={0}
+              className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
+            >
+                <li onClick={logOuthandler}>
+                  <a className="justify-between">
+                    Profile
+                    <span className="badge">New</span>
+                  </a>
+                </li>
+              <li>
+                <a>Settings</a>
+              </li>
+              <li onClick={logOuthandler}>
+                <a>Logout</a>
+              </li>
+            </ul>
+          </div>
+
+          <div className="dropdown dropdown-end">
+            <div
+              tabIndex={0}
+              role="button"
+              className="btn btn-ghost btn-circle avatar"
+            >
+              <div className="w-10 h-10 rounded-full">
+                <img
+                  alt="Tailwind CSS Navbar component"
+                  src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                />
+              </div>
+            </div>
+            <ul
+              tabIndex={0}
+              className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
+            >
+              <NavLink to="/users/profiles">
+                <li>
+                  <a className="justify-between">
+                    Profile
+                    <span className="badge">New</span>
+                  </a>
+                </li>
+              </NavLink>
+              <li>
+                <a>Settings</a>
+              </li>
+              <li>
+                <a>Logout</a>
+              </li>
+            </ul>
           </div>
 
           <label htmlFor="my-drawer-2" className=" lg:hidden ml-2">

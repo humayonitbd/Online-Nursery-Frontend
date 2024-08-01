@@ -10,6 +10,7 @@ import Register from "@/Pages/Login/Register/Register";
 import ProductDetails from "@/Pages/ProductDetails/ProductDetails";
 import ProductManagement from "@/Pages/ProductManagement/ProductManagement";
 import ProductPayment from "@/Pages/ProductPayment/ProductPayment";
+import ProfilePage from "@/Pages/ProfilePage/ProfilePage";
 import ErrorPage from "@/Pages/SharedPage/ErrorPage/ErrorPage";
 import { createBrowserRouter } from "react-router-dom";
 
@@ -60,6 +61,10 @@ const router = createBrowserRouter([
             element: <CategoryManagement />,
           },
         ],
+      },
+      {
+        path: "/users/profiles",
+        element: <ProfilePage />,
       },
       {
         path: "login",

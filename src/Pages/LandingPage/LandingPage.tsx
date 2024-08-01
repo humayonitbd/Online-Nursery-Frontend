@@ -7,7 +7,9 @@ import HousePlantSec from "../HousePlantSec/HousePlantSec";
 import ClientSay from "../ClientSay/ClientSay";
 
 
+
 const LandingPage = () => {
+    
     return (
         <div className="w-11/12 mx-auto">
           <HeroSection />

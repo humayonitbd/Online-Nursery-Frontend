@@ -2,10 +2,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import authApi from "@/redux/features/auth/authApi";
+import { setUser } from "@/redux/features/auth/authSlice";
+import { useAppDispatch } from "@/redux/hooks";
+import { verifyToken } from "@/utils/verifyToken";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { NavLink, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+
 
 type LoginData = {
   email: string;
@@ -17,6 +21,7 @@ const Login = () => {
   const navigate = useNavigate();
   const { register, handleSubmit, reset } = useForm<LoginData>();
   const [loginHandler] = authApi.useLoginMutation();
+    const dispatch = useAppDispatch();
 
   const onSubmit: SubmitHandler<LoginData> = async (data) => {
     console.log("Submitting login data:", data); // Add logging here
@@ -30,46 +35,42 @@ const Login = () => {
       return;
     }
 
-    const loginData = {
-      email: data.email,
-      password: data.password,
-    };
-    console.log("loginData", loginData);
+    
 
-    // try {
-    //   setLoginLoading(true);
-    //   const res: any = await loginHandler(loginData);
-    //   console.log("login res", res);
-
-    //   if (res?.data?.success) {
-    //     setLoginLoading(false);
-    //     Swal.fire({
-    //       icon: "success",
-    //       title: `${res.data.message}`,
-    //       showConfirmButton: false,
-    //       timer: 1000,
-    //     });
-    //     reset();
-    //     navigate("/");
-    //   } else {
-    //     setLoginLoading(false);
-    //     Swal.fire({
-    //       icon: "error",
-    //       title: `${res?.data?.message || "Login failed!"}`,
-    //       showConfirmButton: false,
-    //       timer: 1200,
-    //     });
-    //   }
-    // } catch (error: any) {
-    //   console.error("Login error:", error);
-    //   setLoginLoading(false);
-    //   Swal.fire({
-    //     icon: "error",
-    //     title: `${error?.message || "An error occurred during login!"}`,
-    //     showConfirmButton: false,
-    //     timer: 1200,
-    //   });
-    // }
+    try {
+      setLoginLoading(true);
+      const loginData = {
+        email: data.email,
+        password: data.password,
+      };
+      const res: any = await loginHandler(loginData).unwrap();
+      const token = res?.data?.accessToken;
+      const user = verifyToken(token);
+      dispatch(setUser({ user: user, token: res?.data?.accessToken }));
+      if (res?.success) {
+        setLoginLoading(false);
+        Swal.fire({
+          icon: "success",
+          title: `${res.message}`,
+          showConfirmButton: false,
+          timer: 1000,
+        });
+        reset();
+        navigate("/");
+      } 
+    } catch (error: any) {
+      setLoginLoading(false);
+      if (error?.data.success === false) {
+        Swal.fire({
+          icon: "error",
+          title: `${error?.data?.message || "An error occurred during login!"}`,
+          showConfirmButton: false,
+          timer: 1200,
+        });
+      }
+      
+      
+    }
   };
 
   return (
