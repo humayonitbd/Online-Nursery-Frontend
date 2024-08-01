@@ -7,7 +7,7 @@ import { useAppDispatch } from "@/redux/hooks";
 import { verifyToken } from "@/utils/verifyToken";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
 
@@ -21,7 +21,9 @@ const Login = () => {
   const navigate = useNavigate();
   const { register, handleSubmit, reset } = useForm<LoginData>();
   const [loginHandler] = authApi.useLoginMutation();
-    const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/";
 
   const onSubmit: SubmitHandler<LoginData> = async (data) => {
     console.log("Submitting login data:", data); // Add logging here
@@ -34,8 +36,6 @@ const Login = () => {
       });
       return;
     }
-
-    
 
     try {
       setLoginLoading(true);
@@ -56,8 +56,8 @@ const Login = () => {
           timer: 1000,
         });
         reset();
-        navigate("/");
-      } 
+       navigate(from, { replace: true });
+      }
     } catch (error: any) {
       setLoginLoading(false);
       if (error?.data.success === false) {
@@ -68,8 +68,6 @@ const Login = () => {
           timer: 1200,
         });
       }
-      
-      
     }
   };
 

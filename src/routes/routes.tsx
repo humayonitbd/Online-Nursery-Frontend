@@ -1,4 +1,5 @@
 import MainLayout from "@/Layout/MainLayout/MainLayout";
+import PrivetRoute from "@/Layout/PrivetRoute/PrivetRoute";
 import ProductManagementLayout from "@/Layout/ProductManagmentLayout/ProductManagmentLayout";
 import AllProductsList from "@/Pages/AllProductsList/AllProductsList";
 import CartListPage from "@/Pages/CartListPage/CartListPage";
@@ -11,6 +12,7 @@ import ProductDetails from "@/Pages/ProductDetails/ProductDetails";
 import ProductManagement from "@/Pages/ProductManagement/ProductManagement";
 import ProductPayment from "@/Pages/ProductPayment/ProductPayment";
 import ProfilePage from "@/Pages/ProfilePage/ProfilePage";
+import SettingsPage from "@/Pages/SettingsPage/SettingsPage";
 import ErrorPage from "@/Pages/SharedPage/ErrorPage/ErrorPage";
 import { createBrowserRouter } from "react-router-dom";
 
@@ -64,7 +66,19 @@ const router = createBrowserRouter([
       },
       {
         path: "/users/profiles",
-        element: <ProfilePage />,
+        element: (
+          <PrivetRoute>
+            <ProfilePage />
+          </PrivetRoute>
+        ),
+      },
+      {
+        path: "/users/settings",
+        element: (
+          <PrivetRoute>
+            <SettingsPage />
+          </PrivetRoute>
+        ),
       },
       {
         path: "login",
