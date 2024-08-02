@@ -35,9 +35,8 @@ const paymentApi = baseApi.injectEndpoints({
     }),
     ordersConformProductsDelete: builder.mutation({
       query: (id) => ({
-        url: `/booking/booking-payment/${id}`,
+        url: `/booking/users/bookings/${id}`,
         method: "DELETE",
-       
       }),
       invalidatesTags: ["orderProduct"],
     }),

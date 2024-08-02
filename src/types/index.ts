@@ -36,3 +36,30 @@ export type QueryParams = {
   category?: string;
   sort?: string | number;
 };
+
+export interface TConformOrder {
+  _id: string;
+  orderProductTitle: string;
+  orderProductPrice: number;
+  orderProductCategory: string;
+  orderProductQuantity: number;
+  transactionId: string;
+  userEmail: string;
+  orderProductId: OrderProductId;
+}
+
+export interface OrderProductId {
+  _id: string;
+  title: string;
+  price: number;
+  rating: number;
+  image: string;
+  description: string;
+  stock: number;
+  brand: string;
+  isDeleted: boolean;
+  category: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}

@@ -38,7 +38,7 @@ const CheckoutForm = ({
           setClientSecret(secret);
         }
       } catch (error) {
-        console.error("Error creating payment secret:", error);
+        // console.error("Error creating payment secret:", error);
       }
     };
     fetchPaymentSecret();
@@ -47,7 +47,7 @@ const CheckoutForm = ({
   const fetchPaymentBooking = async (payment: any) => {
     try {
       const res = await paymentBooking(payment).unwrap();
-      console.log('payment respons', res);
+      // console.log('payment respons', res);
       if (res.success) {
         Swal.fire({
           icon: "success",

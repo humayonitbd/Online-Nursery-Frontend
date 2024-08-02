@@ -34,7 +34,7 @@ const ProductPayment = () => {
     );
     const paymentProduct = stateDatas.find((data:TProduct) => data._id === id);
       // const paymentProductState = dispatch(singleBookingProduct(id));
-    console.log("paymentProductState", paymentProduct);
+    // console.log("paymentProductState", paymentProduct);
     
     useEffect(() => {
       // Check if all fields are filled

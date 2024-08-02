@@ -58,7 +58,7 @@ const ClientSay = () => {
       </div>
       <div className="relative h-[450px] ">
         <Carousel
-          className="overflow-hidden rounded-lg shadow-lg"
+          className="overflow-hidden rounded-lg "
           plugins={[
             Autoplay({
               delay: 6000,
