@@ -5,6 +5,7 @@ import AllProductsList from "@/Pages/AllProductsList/AllProductsList";
 import CartListPage from "@/Pages/CartListPage/CartListPage";
 import CategoryByProduct from "@/Pages/CategoryByProduct/CategoryByProduct";
 import CategoryManagement from "@/Pages/CategoryManagement/CategoryManagement";
+import ConformProduct from "@/Pages/ConformProduct/ConformProduct";
 import LandingPage from "@/Pages/LandingPage/LandingPage";
 import Login from "@/Pages/Login/Login/Login";
 import Register from "@/Pages/Login/Register/Register";
@@ -63,6 +64,14 @@ const router = createBrowserRouter([
             element: <CategoryManagement />,
           },
         ],
+      },
+      {
+        path: "/users/dashboard/conform-order",
+        element: (
+          <PrivetRoute>
+            <ConformProduct />
+          </PrivetRoute>
+        ),
       },
       {
         path: "/users/profiles",

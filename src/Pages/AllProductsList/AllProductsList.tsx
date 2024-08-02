@@ -112,10 +112,22 @@ const AllProductsList = () => {
         </div>
       </div>
       <div className="lg:my-10 my-5">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          {products?.data?.map((product: TProduct) => (
-            <ProductCard key={product._id} product={product} />
-          ))}
+        <div>
+          {products?.data.length === 0 ? (
+            <>
+              <div className="h-52 flex justify-center items-center text-2xl font-semibold text-[#76AE42]">
+                <h2>Products is not Available!!</h2>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                {products?.data?.slice(0, 6)?.map((product: TProduct) => (
+                  <ProductCard key={product._id} product={product} />
+                ))}
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>

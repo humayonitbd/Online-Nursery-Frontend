@@ -18,6 +18,28 @@ const paymentApi = baseApi.injectEndpoints({
         method: "POST",
         body: payment,
       }),
+      invalidatesTags: ["orderProduct"],
+    }),
+    ordersConformProducts: builder.query({
+      query: (queryParams) => {
+        let url = "/booking/users/bookings";
+        if (queryParams) {
+          url = `/booking/users/bookings?userEmail=${queryParams}`;
+        }
+        return {
+          url,
+          method: "GET",
+        };
+      },
+      providesTags: ["orderProduct"],
+    }),
+    ordersConformProductsDelete: builder.mutation({
+      query: (id) => ({
+        url: `/booking/booking-payment/${id}`,
+        method: "DELETE",
+       
+      }),
+      invalidatesTags: ["orderProduct"],
     }),
   }),
 });

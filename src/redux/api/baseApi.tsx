@@ -39,7 +39,7 @@ const baseQueryWithRefreshToken: BaseQueryFn<
       timer: 1000,
     });
   }
-  console.log('base api result',result)
+  // console.log('base api result',result)
   if (result?.error?.status === 401) {
     try {
       const res = await fetch(
@@ -72,6 +72,6 @@ const baseQueryWithRefreshToken: BaseQueryFn<
 export const baseApi = createApi({
   reducerPath: "baseApi",
   baseQuery: baseQueryWithRefreshToken,
-  tagTypes: ["category", "product"],
+  tagTypes: ["category", "product", 'orderProduct'],
   endpoints: () => ({}),
 });

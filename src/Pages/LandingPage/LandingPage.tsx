@@ -5,6 +5,7 @@ import ImageGallery from "../ImageGallery/ImageGallery";
 import CategorySection from "../CategorySection/CategorySection";
 import HousePlantSec from "../HousePlantSec/HousePlantSec";
 import ClientSay from "../ClientSay/ClientSay";
+import LatestPopularProducts from "../LatestPopularProducts/LatestPopularProducts";
 
 
 
@@ -15,8 +16,9 @@ const LandingPage = () => {
           <HeroSection />
           <CategorySection />
             <Products />
-            <ImageGallery />
             <HousePlantSec />
+            <ImageGallery />
+            <LatestPopularProducts />
             <ClientSay />
         </div>
     );

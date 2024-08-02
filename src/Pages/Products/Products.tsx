@@ -61,69 +61,81 @@ const { data: products, isLoading } =
           </h2>
         </div>
         <div>
-        <div>
-          <div className="hidden md:grid grid-cols-1 md:grid-cols-3 gap-5 mb-10">
-            {/* Filter button */}
-            <div className="flex justify-start items-center md:order-1 md:col-span-1">
-              <ProductFilter
-                setFilterValue={setFilterValue}
-                filterValue={filterValue}
-              />
-            </div>
-            {/* Search button */}
-            <div className="md:order-2 md:col-span-1">
-              <div className="md:px-2">
-                <input
-                  type="text"
-                  value={searchTerm}
-                  onChange={handleSearchChange}
-                  placeholder="Search by product"
-                  className="py-3 px-2 border-4 border-[#76AE42] rounded-full outline-none w-full"
+          <div>
+            <div className="hidden md:grid grid-cols-1 md:grid-cols-3 gap-5 mb-10">
+              {/* Filter button */}
+              <div className="flex justify-start items-center md:order-1 md:col-span-1">
+                <ProductFilter
+                  setFilterValue={setFilterValue}
+                  filterValue={filterValue}
                 />
               </div>
-            </div>
-            {/* Sorting button */}
-            <div className="flex justify-end items-center md:order-3 md:col-span-1">
-              <ProductSorting setSortingValue={setSortingValue} />
-            </div>
-          </div>
-          {/* Under md show section */}
-          <div className="md:hidden mt-5 grid grid-cols-1">
-            {/* Search Field */}
-            <div className="bg-gray-600 mb-5">
-              <div className="md:px-2">
-                <input
-                  type="text"
-                  value={searchTerm}
-                  onChange={handleSearchChange}
-                  placeholder="Search by product"
-                  className="py-5 px-2 border-4 border-[#76AE42] rounded-full outline-none w-full"
-                />
-              </div>
-            </div>
-            {/* Filter Button */}
-            <div className="grid grid-cols-2 gap-5">
-              <div className="bg-red-300 mb-5">
-                <button className="py-3 px-6 bg-gray-400 text-white rounded-lg w-full">
-                  <ProductFilter
-                    setFilterValue={setFilterValue}
-                    filterValue={filterValue}
+              {/* Search button */}
+              <div className="md:order-2 md:col-span-1">
+                <div className="md:px-2">
+                  <input
+                    type="text"
+                    value={searchTerm}
+                    onChange={handleSearchChange}
+                    placeholder="Search by product"
+                    className="py-3 px-2 border-4 border-[#76AE42] rounded-full outline-none w-full"
                   />
-                </button>
+                </div>
               </div>
-              {/* Sorting Button */}
-              <div className="">
+              {/* Sorting button */}
+              <div className="flex justify-end items-center md:order-3 md:col-span-1">
                 <ProductSorting setSortingValue={setSortingValue} />
+              </div>
+            </div>
+            {/* Under md show section */}
+            <div className="md:hidden mt-5 grid grid-cols-1">
+              {/* Search Field */}
+              <div className="bg-gray-600 mb-5">
+                <div className="md:px-2">
+                  <input
+                    type="text"
+                    value={searchTerm}
+                    onChange={handleSearchChange}
+                    placeholder="Search by product"
+                    className="py-5 px-2 border-4 border-[#76AE42] rounded-full outline-none w-full"
+                  />
+                </div>
+              </div>
+              {/* Filter Button */}
+              <div className="grid grid-cols-2 gap-5">
+                <div className="bg-red-300 mb-5">
+                  <button className="py-3 px-6 bg-gray-400 text-white rounded-lg w-full">
+                    <ProductFilter
+                      setFilterValue={setFilterValue}
+                      filterValue={filterValue}
+                    />
+                  </button>
+                </div>
+                {/* Sorting Button */}
+                <div className="">
+                  <ProductSorting setSortingValue={setSortingValue} />
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
         <div className="lg:my-10 my-5">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {products?.data?.slice(0, 6)?.map((product:TProduct) => (
-              <ProductCard key={product._id} product={product} />
-            ))}
+          <div>
+            {products?.data.length === 0 ? (
+              <>
+                <div className="h-52 flex justify-center items-center text-2xl font-semibold text-[#76AE42]">
+                  <h2>Products is not Available!!</h2>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                  {products?.data?.slice(3, 9)?.map((product: TProduct) => (
+                    <ProductCard key={product._id} product={product} />
+                  ))}
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>

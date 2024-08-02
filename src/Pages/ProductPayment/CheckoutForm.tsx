@@ -14,7 +14,7 @@ const CheckoutForm = ({
   userData,
 }: {
   paymentProduct: TProduct;
-  userData: { userName: string; userEmail: string; userAddress: string };
+  userData: { userName: string; userEmail: string | null; userAddress: string };
 }) => {
   const [cardError, setCardError] = useState("");
   const [clientSecret, setClientSecret] = useState("");
@@ -47,40 +47,35 @@ const CheckoutForm = ({
   const fetchPaymentBooking = async (payment: any) => {
     try {
       const res = await paymentBooking(payment).unwrap();
+      console.log('payment respons', res);
       if (res.success) {
         Swal.fire({
           icon: "success",
-          title: res.message || "Product Payment Successful!!",
+          title: res?.message || "Product Payment Successful!!",
           showConfirmButton: false,
-          timer: 1000,
-        });
+          timer: 1200,
+        }); 
         dispatch(deletePaymentBookingProduct(_id));
         navigate("/"); 
-      }
-    } catch (error: any) {
-      if (error.response && error.response.data) {
-        if (error.response.data.message === "Product is out of stock!") {
-          Swal.fire({
-            title: "Error!",
-            text: "Product is out of stock!",
-            icon: "error",
-          });
-        } else {
-          Swal.fire({
-            title: "Error!",
-            text:
-              error.response.data.message ||
-              "Occurred Processing And Stock Out Product",
-            icon: "error",
-          });
-        }
-      } else {
+      }else{
         Swal.fire({
-          title: "Error!",
-          text: "Occurred Processing And Stock Out Product",
           icon: "error",
+          title: `${res?.data?.message}`,
+          showConfirmButton: false,
+          timer: 1200,
         });
+    }
+  } 
+    catch (error: any) {
+      if(error.status === 400){
+        Swal.fire({
+        icon: "error",
+        title: `${error?.data?.message}`,
+        showConfirmButton: false,
+        timer: 1200,
+      });
       }
+      
     }
   };
 

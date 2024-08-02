@@ -69,17 +69,20 @@ const ClientSay = () => {
             {groupedClientData.map((group, index) => (
               <CarouselItem
                 key={index}
-                className="min-w-full relative bg-[#1F2937]"
+                className="min-w-full relative bg-[#fff]"
               >
                 <div className="flex space-x-4">
                   {group?.map((client) => (
-                    <Card key={client.id} className="w-1/2 bg-transparent rounded-none">
+                    <Card
+                      key={client.id}
+                      className="w-1/2 bg-transparent rounded-none"
+                    >
                       <CardContent className="flex items-center justify-center h-[450px] p-0 relative">
-                        <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#1F2937] bg-opacity-50 text-slate-300 text-lg z-20">
+                        <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#fff] bg-opacity-50 text-slate-700 text-lg z-20">
                           <p className="mb-4 text-center px-4 lg:mx-20">
                             {client.details}
                           </p>
-                          <h2 className="text-xl text-center font-bold mb-4">
+                          <h2 className="text-xl text-center font-bold mb-2">
                             {client.name}
                           </h2>
                           <div>

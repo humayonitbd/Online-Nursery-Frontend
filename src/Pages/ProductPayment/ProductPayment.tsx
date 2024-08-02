@@ -19,13 +19,13 @@ const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 const ProductPayment = () => {
     const {id} = useParams();
     const [userName, setUserName] = useState('');
-    const [userEmail, setUserEmail] = useState('');
     const [userAddress, setUserAddress] = useState('');
     const [isFormValid, setIsFormValid] = useState(false);
+    const user = useAppSelector((state)=>state.auth.user);
 
-    const userData = {
+    const userData:{userName:string;userEmail:string | null;userAddress:string} = {
       userName,
-      userEmail,
+      userEmail:user ? user.email : null,
       userAddress
     }
     // const {data, isLoading} = productApi.useGetSingleProductQuery(id);
@@ -38,12 +38,12 @@ const ProductPayment = () => {
     
     useEffect(() => {
       // Check if all fields are filled
-      if (userName && userEmail && userAddress) {
+      if (userName && userAddress) {
         setIsFormValid(true);
       } else {
         setIsFormValid(false);
       }
-    }, [userName, userEmail, userAddress]);
+    }, [userName, userAddress]);
 
     if (!paymentProduct) {
       return <div className="text-center text-red-500 font-semibold text-2xl my-60">Product not found</div>;
@@ -123,31 +123,16 @@ const ProductPayment = () => {
                       htmlFor="name"
                       className="text-lg font-semibold text-gray-900 "
                     >
-                      Type Email
+                      Type Address
                     </label>
                     <br />
                     <input
-                      onChange={(e) => setUserEmail(e.target.value)}
+                      onChange={(e) => setUserAddress(e.target.value)}
+                      type="text"
                       className="w-full rounded-md py-2 mt-3 px-2"
-                      type="email"
-                      placeholder="type your email!!"
+                      placeholder="type your address!!"
                     />
                   </div>
-                </div>
-                <div className="">
-                  <label
-                    htmlFor="name"
-                    className="text-lg font-semibold text-gray-900 "
-                  >
-                    Type Address
-                  </label>
-                  <br />
-                  <input
-                    onChange={(e) => setUserAddress(e.target.value)}
-                    type="text"
-                    className="w-full rounded-md py-2 mt-3 px-2"
-                    placeholder="type your address!!"
-                  />
                 </div>
               </div>
             </div>

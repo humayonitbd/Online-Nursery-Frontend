@@ -11,7 +11,7 @@ const Navbar = () => {
   const cartItem = useAppSelector((state) => state.products.products);
   const user = useAppSelector((state) => state.auth.user);
   const dispatch = useDispatch();
-  console.log("user", user);
+  // console.log("user", user);
 
   const logOuthandler = async()=>{
     
@@ -156,18 +156,34 @@ const Navbar = () => {
                 Products
               </NavLink>
             </li>
-            {!user && user===null && <li className="mr-2">
-              <NavLink
-                className={({ isActive }) =>
-                  isActive
-                    ? "font-medium text-base text-slate-700 rounded-none border-b-2 border-[#76AE42]"
-                    : "font-medium text-base text-slate-700 btn-none"
-                }
-                to="/login"
-              >
-                Login
-              </NavLink>
-            </li>}
+            {!user && user === null && (
+              <li className="mr-2">
+                <NavLink
+                  className={({ isActive }) =>
+                    isActive
+                      ? "font-medium text-base text-slate-700 rounded-none border-b-2 border-[#76AE42]"
+                      : "font-medium text-base text-slate-700 btn-none"
+                  }
+                  to="/login"
+                >
+                  Login
+                </NavLink>
+              </li>
+            )}
+            {user && user?.email  && (
+              <li className="mr-2">
+                <NavLink
+                  className={({ isActive }) =>
+                    isActive
+                      ? "font-medium text-base text-slate-700 rounded-none border-b-2 border-[#76AE42]"
+                      : "font-medium text-base text-slate-700 btn-none"
+                  }
+                  to="/users/dashboard/conform-order"
+                >
+                  Dashboard
+                </NavLink>
+              </li>
+            )}
           </ul>
         </div>
         <div className="navbar-end">
