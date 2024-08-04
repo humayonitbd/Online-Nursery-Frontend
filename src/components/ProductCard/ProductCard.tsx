@@ -16,7 +16,7 @@ import Swal from "sweetalert2";
 const ProductCard = ({ product }: { product: TProduct }) => {
  
   const location = useLocation();
-  console.log("current location", location.pathname);
+  // console.log("current location", location.pathname);
 
   const dispatch = useAppDispatch();
 

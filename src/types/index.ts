@@ -1,8 +1,8 @@
-
+export * from "./global.Type";
 
 export type TProduct = {
   _id: string;
-  quantity?:number;
+  quantity?: number;
   category: string;
   title: string;
   price: number;
@@ -14,11 +14,11 @@ export type TProduct = {
   isDeleted?: boolean;
 };
 
-export type TCategory={
-  _id:string;
-  name:string;
-  isDeleted:boolean;
-}
+export type TCategory = {
+  _id: string;
+  name: string;
+  isDeleted: boolean;
+};
 
 export type TPaymentData = {
   orderProductTitle: string;
@@ -35,6 +35,7 @@ export type QueryParams = {
   price?: number | string;
   category?: string;
   sort?: string | number;
+  page?:number;
 };
 
 export interface TConformOrder {
@@ -63,3 +64,17 @@ export interface OrderProductId {
   updatedAt: string;
   __v: number;
 }
+
+
+
+
+export type TReview = {
+  _id: string;
+  rating: number;
+  reviewMessage: string;
+  productId: string;
+  reviewAddDate: string;
+  ratingUserName: string;
+  ratingUserImg: string;
+  __v: number;
+};

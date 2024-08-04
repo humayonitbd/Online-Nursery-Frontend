@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import ProductSorting from "@/components/ProductSorting/ProductSorting";
 import ProductFilter from "@/components/ProductFilter/ProductFilter";
 import { debounce } from "lodash";
+import PaginationSection from "@/components/PaginationSection/PaginationSection";
 
 const AllProductsList = () => {
     const [sortingValue, setSortingValue] = useState<string>("");
@@ -13,6 +14,12 @@ const AllProductsList = () => {
     const [searchTerm, setSearchTerm] = useState<string>("");
     const [debouncedValue, setDebouncedValue] = useState<string>("");
     const [queryParams, setQueryParams] = useState<QueryParams>({});
+    const [currentPage, setCurrentPage] = useState(1);
+    
+
+    const handlePageChange = (page: number) => {
+      setCurrentPage(page);
+    };
 
     // Function to debounce API call
     const debouncedSearch = debounce((term: string) => {
@@ -39,13 +46,19 @@ const AllProductsList = () => {
       if (filterValue) {
         params.price = filterValue;
       }
-      setQueryParams(params);
-    }, [ sortingValue, debouncedValue, filterValue]);
 
+      if (currentPage) {
+        params.page = currentPage;
+      }
+
+      setQueryParams(params);
+    }, [sortingValue, debouncedValue, filterValue, currentPage]);
 
   const { data: products, isLoading } =
     productApi.useGetAllProductQuery(queryParams);
+    const meta = products?.meta;
 
+    // console.log("Products Meta", meta);
   if (isLoading) {
     return <SmallLoading />;
   }
@@ -113,7 +126,7 @@ const AllProductsList = () => {
       </div>
       <div className="lg:my-10 my-5">
         <div>
-          {products?.data.length === 0 ? (
+          {products?.data?.length === 0 ? (
             <>
               <div className="h-52 flex justify-center items-center text-2xl font-semibold text-[#76AE42]">
                 <h2>Products is not Available!!</h2>
@@ -122,13 +135,21 @@ const AllProductsList = () => {
           ) : (
             <>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-                {products?.data?.slice(0, 6)?.map((product: TProduct) => (
+                {products?.data?.map((product: TProduct) => (
                   <ProductCard key={product._id} product={product} />
                 ))}
               </div>
             </>
           )}
         </div>
+      </div>
+      <div>
+        <PaginationSection
+          page={currentPage}
+          totalItems={meta?.total}
+          limit={meta?.limit}
+          onPageChange={handlePageChange}
+        />
       </div>
     </div>
   );

@@ -10,10 +10,22 @@ import { RootState } from "../store";
 import Swal from "sweetalert2";
 import { logOut, setUser } from "../features/auth/authSlice";
 
+interface ErrorResponse {
+  status: number;
+  data: {
+    message: string;
+  };
+}
+
+// Define the result type
+interface Result {
+  error?: ErrorResponse;
+}
+
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: "https://online-nursery-backend.vercel.app/api/v1",
-  // baseUrl: "http://localhost:5000/api/v1",
+  // baseUrl: "https://online-nursery-backend.vercel.app/api/v1",
+  baseUrl: "http://localhost:5000/api/v1",
   credentials: "include",
   prepareHeaders: (headers, { getState }) => {
     const token = (getState() as RootState).auth.token;
@@ -34,7 +46,7 @@ const baseQueryWithRefreshToken: BaseQueryFn<
   if (result?.error?.status === 404) {
     Swal.fire({
       icon: "error",
-      title: `${result?.error?.data?.message}`,
+      title: `${(result as Result)?.error?.data?.message}`,
       showConfirmButton: false,
       timer: 1000,
     });
@@ -72,6 +84,6 @@ const baseQueryWithRefreshToken: BaseQueryFn<
 export const baseApi = createApi({
   reducerPath: "baseApi",
   baseQuery: baseQueryWithRefreshToken,
-  tagTypes: ["category", "product", 'orderProduct'],
+  tagTypes: ["category", "product", 'orderProduct', 'reviews'],
   endpoints: () => ({}),
 });

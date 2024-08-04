@@ -1,5 +1,6 @@
 
 import { baseApi } from "@/redux/api/baseApi";
+import { QueryParams, TProduct, TResponseRedux } from "@/types";
 
 const productApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -28,11 +29,16 @@ const productApi = baseApi.injectEndpoints({
         if (queryParams && Object.keys(queryParams).length > 0) {
           const queryString = new URLSearchParams(queryParams).toString();
           url = `/product?${queryString}`;
-
         }
         return {
           url,
           method: "GET",
+        };
+      },
+      transformResponse: (response: TResponseRedux<TProduct[]>) => {
+        return {
+          data: response.data,
+          meta: response.meta,
         };
       },
       providesTags: ["product"],

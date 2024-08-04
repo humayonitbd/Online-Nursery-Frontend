@@ -31,6 +31,7 @@ const paymentApi = baseApi.injectEndpoints({
           method: "GET",
         };
       },
+      
       providesTags: ["orderProduct"],
     }),
     ordersConformProductsDelete: builder.mutation({
