@@ -121,7 +121,7 @@ const { data: products, isLoading } =
         </div>
         <div className="lg:my-10 my-5">
           <div>
-            {products?.data.length === 0 ? (
+            {products?.data?.length === 0 ? (
               <>
                 <div className="h-52 flex justify-center items-center text-2xl font-semibold text-[#76AE42]">
                   <h2>Products is not Available!!</h2>

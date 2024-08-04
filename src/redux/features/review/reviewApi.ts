@@ -13,8 +13,8 @@ const reviewApi = baseApi.injectEndpoints({
     }),
 
     getAllReview: builder.query({
-      query: () => ({
-        url: "/product-review",
+      query: (id) => ({
+        url: `/product-review?productId=${id}`,
         method: "GET",
       }),
       providesTags: ["reviews"],

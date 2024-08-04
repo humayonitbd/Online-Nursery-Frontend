@@ -101,7 +101,7 @@ const ProductCard = ({ product }: { product: TProduct }) => {
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-2">
               <Star className="#EF4444" fill="#76AE42" />
-              <p className="text-2xl font-bold">{product?.rating}</p>
+              <p className="text-2xl font-bold">{product?.rating.toFixed(1)}</p>
             </div>
             <div>
               <p className="text-lg text-gray-400 font-bold">
