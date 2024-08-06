@@ -45,6 +45,32 @@ const reviewApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["reviews"],
     }),
+
+    addReviewLike: builder.mutation({
+      query: (data) => ({
+        url: `/product-review/add-like`,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["reviewsLike", "reviews"],
+      // invalidatesTags: ["reviews"],
+    }),
+
+    allReviewLike: builder.query({
+      query: (email) => ({
+        url: `/product-review/like?email=${email}`,
+        method: "GET",
+      }),
+      providesTags: ["reviewsLike"],
+    }),
+
+    deleteReviewLike: builder.mutation({
+      query: () => ({
+        url: `/product-review/like`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["reviewsLike"],
+    }),
   }),
 });
 

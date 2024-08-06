@@ -76,5 +76,14 @@ export type TReview = {
   reviewAddDate: string;
   ratingUserName: string;
   ratingUserImg: string;
+  likeTotal:number;
+  __v: number;
+};
+
+export type TReviewLike = {
+  _id: string;
+  email: string;
+  reviewId: string;
+  like: boolean;
   __v: number;
 };

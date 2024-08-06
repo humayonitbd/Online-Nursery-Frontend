@@ -8,9 +8,10 @@ import { Plus, Star, StarIcon } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { ReviewModal } from '@/components/ReviewModal/ReviewModal';
 import reviewApi from '@/redux/features/review/reviewApi';
-import { TProduct, TReview } from '@/types';
+import { TProduct, TReview, TReviewLike } from '@/types';
 import { ReviewUpdateModal } from '@/components/ReviewUpdateModal/ReviewUpdateModal';
 import { addBookingProduct } from '@/redux/features/bookingProduct/bookingProductSlice';
+
 
 const ProductDetails = () => {
     const user = useAppSelector((state)=> state.auth.user);
@@ -18,9 +19,14 @@ const ProductDetails = () => {
     const { id } = useParams();
     const navigate = useNavigate();
       const { data:product, isLoading } = productApi.useGetSingleProductQuery(id as string);
-      const { data: reviews, isLoading: reviewLoading } =
+      const { data: reviews } =
         reviewApi.useGetAllReviewQuery(id, { skip: isLoading });
       const [deleteReview] = reviewApi.useSingleDeleteReviewMutation();
+      const [addReviewLike] = reviewApi.useAddReviewLikeMutation();
+      const { data: reviewLikes } = reviewApi.useAllReviewLikeQuery(
+        user?.email,
+        { skip: isLoading }
+      );
 
  const renderStars = (rating: number) => {
    const stars = [];
@@ -88,7 +94,6 @@ const deleteReviewHandler = async(id:string)=>{
 }
 
 
-    // console.log('userData', userData);
     const notUserReviewHandler=()=>{
       if(!user?.email){
         return Swal.fire({
@@ -100,9 +105,6 @@ const deleteReviewHandler = async(id:string)=>{
       }
       navigate('/login');
     }
-
-
-  
 
     const addToCartHandler = async (product: TProduct) => {
       try {
@@ -126,12 +128,45 @@ const deleteReviewHandler = async(id:string)=>{
       }
     };
 
+  const likeHandler =async(id:string)=>{
+    const data = {
+      email: user?.email,
+      like: true,
+      reviewId: id,
+    };
+    try {
+      const res = await addReviewLike(data).unwrap();
+    if (res?.success) {
+        console.log('like', res);
+      }
+    } catch (error) {
+      console.log("like error", error);
+    }
+
+  }
+
 
  if (isLoading) {
    return <SmallLoading />;
  }
 
-//  console.log('review data', reviews.data)
+ console.log('review data', reviews?.data);
+ console.log("reviewLikes data", reviewLikes?.data);
+
+ const likeReviewHandler = (reviewId: string): boolean => {
+   const likedReview = reviewLikes?.data?.find(
+     (reviewLike: TReviewLike) =>
+       user?.email === reviewLike.email &&
+       reviewId === reviewLike?.reviewId &&
+       reviewLike.like
+   );
+   console.log('normal-',likedReview)
+   console.log('normal-not',!!likedReview)
+   return !!likedReview; // Convert to boolean
+ };
+
+//  console.log('like review handler', likeReviewHandler())
+
     return (
       <div className="w-11/12 mx-auto bg-gray-900">
         <div className="flex flex-col items-center p-4 bg-gray-900 text-white  pt-8 lg:py-16">
@@ -242,7 +277,10 @@ const deleteReviewHandler = async(id:string)=>{
             ) : (
               <>
                 {reviews?.data?.map((review: TReview) => (
-                  <div className="flex justify-start items-center  text-slate-200 mb-4">
+                  <div
+                    key={review?._id}
+                    className="flex justify-start items-center  text-slate-200 mb-4"
+                  >
                     <div className="flex justify-start items-start mr-2">
                       <img
                         src={review?.ratingUserImg}
@@ -263,12 +301,22 @@ const deleteReviewHandler = async(id:string)=>{
                         </div>
                         <div className="flex justify-between items-center px-2">
                           <div>
-                            <button className="mr-5">Like</button>
+                            <button
+                              onClick={() => likeHandler(review._id)}
+                              // onClick={() => likeReviewHandler(review._id)}
+                              className={`mr-5 ${
+                                likeReviewHandler(review._id)
+                                  ? "text-blue-500"
+                                  : ""
+                              }`}
+                            >
+                              Like
+                            </button>
                             <button>Replay</button>
                           </div>
 
                           <button>
-                            <span>25</span>
+                            <span>{review?.likeTotal}</span>
                             👍<span className="-m-3">❤</span>😊
                           </button>
                         </div>
