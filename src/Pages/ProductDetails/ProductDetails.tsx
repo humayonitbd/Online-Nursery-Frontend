@@ -8,10 +8,16 @@ import { Plus, Star, StarIcon } from 'lucide-react';
 import Swal from 'sweetalert2';
 import { ReviewModal } from '@/components/ReviewModal/ReviewModal';
 import reviewApi from '@/redux/features/review/reviewApi';
-import { TProduct, TReview, TReviewLike } from '@/types';
+import { TProduct, TReplayReview, TReview, TReviewLike } from '@/types';
 import { ReviewUpdateModal } from '@/components/ReviewUpdateModal/ReviewUpdateModal';
 import { addBookingProduct } from '@/redux/features/bookingProduct/bookingProductSlice';
+import { ReviewReplayModal } from '@/components/ReviewReplayModal/ReviewReplayModal';
 
+
+export type TLikeReviewResult ={
+  liked: boolean;
+  likedId?: string;
+}
 
 const ProductDetails = () => {
     const user = useAppSelector((state)=> state.auth.user);
@@ -19,7 +25,7 @@ const ProductDetails = () => {
     const { id } = useParams();
     const navigate = useNavigate();
       const { data:product, isLoading } = productApi.useGetSingleProductQuery(id as string);
-      const { data: reviews } =
+      const { data: reviews, isLoading:reviewLoading } =
         reviewApi.useGetAllReviewQuery(id, { skip: isLoading });
       const [deleteReview] = reviewApi.useSingleDeleteReviewMutation();
       const [addReviewLike] = reviewApi.useAddReviewLikeMutation();
@@ -27,6 +33,10 @@ const ProductDetails = () => {
         user?.email,
         { skip: isLoading }
       );
+      const { data: replayReviews } = reviewApi.useGetReplayReviewQuery(id, {
+        skip: reviewLoading,
+      });
+      const [deleteUpdateReviewLike] = reviewApi.useDeleteUpdateReviewLikeMutation();
 
  const renderStars = (rating: number) => {
    const stars = [];
@@ -50,12 +60,6 @@ const ProductDetails = () => {
      year: "numeric",
    });
  };
-
- // celculate average rating max 10
-//  const totalRating = reviews.reduce((acc: number, review: any) => {
-//    return acc + review.rating;
-//  }, 0);
-//  const averageRating = totalRating / reviews.length;
   
 
 /// review delete handler 
@@ -144,28 +148,40 @@ const deleteReviewHandler = async(id:string)=>{
     }
 
   }
+ 
 
+  const likeDeleteHandler = async (id: string, reviewIdDel:string) => {
+    const deleteData = {
+      email: user?.email,
+      like: false,
+      reviewId: reviewIdDel,
+    };
+    console.log("delete like", deleteData);
+    try {
+      const res = await deleteUpdateReviewLike({id, deleteData}).unwrap();
+      if (res?.success) {
+        console.log("delete like", res);
+      }
+    } catch (error) {
+      console.log("delete like error", error);
+    }
+  };
 
- if (isLoading) {
-   return <SmallLoading />;
- }
-
- console.log('review data', reviews?.data);
- console.log("reviewLikes data", reviewLikes?.data);
-
- const likeReviewHandler = (reviewId: string): boolean => {
+ const likeReviewHandler = (reviewId: string): TLikeReviewResult => {
    const likedReview = reviewLikes?.data?.find(
      (reviewLike: TReviewLike) =>
        user?.email === reviewLike.email &&
        reviewId === reviewLike?.reviewId &&
        reviewLike.like
    );
-   console.log('normal-',likedReview)
-   console.log('normal-not',!!likedReview)
-   return !!likedReview; // Convert to boolean
+   return { liked: !!likedReview, likedId: likedReview?._id };
  };
 
+ if (isLoading) {
+   return <SmallLoading />;
+ }
 //  console.log('like review handler', likeReviewHandler())
+ console.log("replay review ", replayReviews?.data);
 
     return (
       <div className="w-11/12 mx-auto bg-gray-900">
@@ -265,101 +281,364 @@ const deleteReviewHandler = async(id:string)=>{
           <div className=" pb-4">
             <hr className=" text-slate-200" />
           </div>
-          <div className="">
-            {reviews?.data?.length === 0 ? (
-              <>
-                <div>
-                  <p className="text-base text-[#76AE42] text-semibold  ">
-                    Product Review not available..!
-                  </p>
-                </div>
-              </>
-            ) : (
-              <>
-                {reviews?.data?.map((review: TReview) => (
-                  <div
-                    key={review?._id}
-                    className="flex justify-start items-center  text-slate-200 mb-4"
-                  >
-                    <div className="flex justify-start items-start mr-2">
-                      <img
-                        src={review?.ratingUserImg}
-                        className="h-10 w-10 rounded-full mr-2"
-                        alt=""
-                      />
-                      <div>
-                        <div className="bg-[#2b3747de] p-2 rounded-tr-3xl rounded-bl-3xl rounded-br-3xl min-w-48 max-w-96">
-                          <div>
-                            <p className="leading-3 font-semibold text-base">
-                              {review?.ratingUserName}
-                            </p>
-                            <p className="text-slate-200 text-sm ">
-                              {formatDate(review?.reviewAddDate)}
-                            </p>
-                          </div>
-                          <div>{review?.reviewMessage}</div>
-                        </div>
-                        <div className="flex justify-between items-center px-2">
-                          <div>
-                            <button
-                              onClick={() => likeHandler(review._id)}
-                              // onClick={() => likeReviewHandler(review._id)}
-                              className={`mr-5 ${
-                                likeReviewHandler(review._id)
-                                  ? "text-blue-500"
-                                  : ""
-                              }`}
-                            >
-                              Like
-                            </button>
-                            <button>Replay</button>
-                          </div>
-
-                          <button>
-                            <span>{review?.likeTotal}</span>
-                            👍<span className="-m-3">❤</span>😊
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="">
-                      <div className="dropdown -top-3">
-                        <div tabIndex={0} role="button" className="">
-                          <div className="">
-                            <button className=" btn btn-sm btn-square bg-[#2b3747de] text-slate-200 hover:bg-[#2b3747de] ">
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                className="inline-block h-5 w-5 stroke-current"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth="2"
-                                  d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"
-                                ></path>
-                              </svg>
-                            </button>
-                          </div>
-                        </div>
-                        <ul
-                          tabIndex={0}
-                          className="menu menu-sm text-gray-800 dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-40 p-2 shadow"
-                        >
-                          <li>
-                            <ReviewUpdateModal id={review?._id} />
-                          </li>
-                          <li onClick={() => deleteReviewHandler(review?._id)}>
-                            <a>Delete</a>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
+          <div>
+            <div className="">
+              {reviews?.data?.length === 0 ? (
+                <>
+                  <div>
+                    <p className="text-base text-[#76AE42] text-semibold  ">
+                      Product Review not available..!
+                    </p>
                   </div>
-                ))}
-              </>
-            )}
+                </>
+              ) : (
+                <>
+                  {reviews?.data?.map((review: TReview) => (
+                    <div key={review?._id}>
+                      <div className="flex justify-start items-center  text-slate-200 mb-4">
+                        <div className="flex justify-start items-start mr-2">
+                          <img
+                            src={review?.ratingUserImg}
+                            className="h-10 w-10 rounded-full mr-2"
+                            alt=""
+                          />
+                          <div>
+                            <div className="bg-[#2b3747de] p-2 rounded-tr-3xl rounded-bl-3xl rounded-br-3xl min-w-48 max-w-96">
+                              <div>
+                                <p className="leading-3 font-semibold text-base">
+                                  {review?.ratingUserName}
+                                </p>
+                                <p className="text-slate-200 text-sm ">
+                                  {formatDate(review?.reviewAddDate)}
+                                </p>
+                              </div>
+                              <div>{review?.reviewMessage}</div>
+                            </div>
+                            <div className="flex justify-between items-center px-2">
+                              <div>
+                                {likeReviewHandler(review._id).liked ? (
+                                  <button
+                                    onClick={() =>
+                                      likeDeleteHandler(
+                                        likeReviewHandler(review._id).likedId ||
+                                          "",
+                                        review?._id
+                                      )
+                                    }
+                                    className="mr-5 text-blue-500"
+                                  >
+                                    Unlike
+                                  </button>
+                                ) : (
+                                  <button
+                                    onClick={() => likeHandler(review._id)}
+                                    className="mr-5"
+                                  >
+                                    Like
+                                  </button>
+                                )}
+                                <button>
+                                  <ReviewReplayModal
+                                    review={review}
+                                    productId={product?.data?._id}
+                                  />
+                                </button>
+                              </div>
+
+                              <button>
+                                <span>{review?.likeTotal}</span>
+                                👍<span className="-m-3">❤</span>😊
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="">
+                          <div className="dropdown -top-3">
+                            <div tabIndex={0} role="button" className="">
+                              <div className="">
+                                <button className=" btn btn-sm btn-square bg-[#2b3747de] text-slate-200 hover:bg-[#2b3747de] ">
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    className="inline-block h-5 w-5 stroke-current"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth="2"
+                                      d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"
+                                    ></path>
+                                  </svg>
+                                </button>
+                              </div>
+                            </div>
+                            <ul
+                              tabIndex={0}
+                              className="menu menu-sm text-gray-800 dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-40 p-2 shadow"
+                            >
+                              <li>
+                                <ReviewUpdateModal id={review?._id} />
+                              </li>
+                              <li
+                                onClick={() => deleteReviewHandler(review?._id)}
+                              >
+                                <a>Delete</a>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                      {/* <div>
+                        {replayReviews?.data?.map((replayReview: TReplayReview,replayReview.reviewId === review._id ) => (<div
+                              key={replayReview?._id}
+                              className="flex justify-start items-center  text-slate-200 mb-4"
+                            >
+                              <div className="flex justify-start items-start mr-2">
+                                <img
+                                  src={replayReview?.ratingUserImg}
+                                  className="h-10 w-10 rounded-full mr-2"
+                                  alt=""
+                                />
+                                <div>
+                                  <div className="bg-[#2b3747de] p-2 rounded-tr-3xl rounded-bl-3xl rounded-br-3xl min-w-48 max-w-96">
+                                    <div>
+                                      <p className="leading-3 font-semibold text-base">
+                                        {replayReview?.ratingUserName}
+                                      </p>
+                                      <p className="text-slate-200 text-sm ">
+                                        {formatDate(
+                                          replayReview?.reviewAddDate
+                                        )}
+                                      </p>
+                                    </div>
+                                    <div>
+                                      {replayReview?.replayReviewMessage}
+                                    </div>
+                                  </div>
+                                  <div className="flex justify-between items-center px-2">
+                                    <div>
+                                      {likeReviewHandler(replayReview._id)
+                                        .liked ? (
+                                        <button
+                                          onClick={() =>
+                                            likeDeleteHandler(
+                                              likeReviewHandler(
+                                                replayReview._id
+                                              ).likedId || "",
+                                              replayReview?._id
+                                            )
+                                          }
+                                          className="mr-5 text-blue-500"
+                                        >
+                                          Unlike
+                                        </button>
+                                      ) : (
+                                        <button
+                                          onClick={() =>
+                                            likeHandler(replayReview._id)
+                                          }
+                                          className="mr-5"
+                                        >
+                                          Like
+                                        </button>
+                                      )}
+                                      <button>
+                                        <ReviewReplayModal
+                                          review={replayReview}
+                                          productId={product?.data?._id}
+                                        />
+                                      </button>
+                                    </div>
+
+                                    <button>
+                                      <span>{replayReview?.likeTotal}</span>
+                                      👍<span className="-m-3">❤</span>😊
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="">
+                                <div className="dropdown -top-3">
+                                  <div tabIndex={0} role="button" className="">
+                                    <div className="">
+                                      <button className=" btn btn-sm btn-square bg-[#2b3747de] text-slate-200 hover:bg-[#2b3747de] ">
+                                        <svg
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          fill="none"
+                                          viewBox="0 0 24 24"
+                                          className="inline-block h-5 w-5 stroke-current"
+                                        >
+                                          <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth="2"
+                                            d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"
+                                          ></path>
+                                        </svg>
+                                      </button>
+                                    </div>
+                                  </div>
+                                  <ul
+                                    tabIndex={0}
+                                    className="menu menu-sm text-gray-800 dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-40 p-2 shadow"
+                                  >
+                                    <li>
+                                      <ReviewUpdateModal
+                                        id={replayReview?._id}
+                                      />
+                                    </li>
+                                    <li
+                                      onClick={() =>
+                                        deleteReviewHandler(replayReview?._id)
+                                      }
+                                    >
+                                      <a>Delete</a>
+                                    </li>
+                                  </ul>
+                                </div>
+                              </div>
+                            </div>) )}
+                      </div> */}
+                      <div className='ml-14'>
+                        {replayReviews?.data
+                          ?.filter(
+                            (replayReview: TReplayReview) =>
+                              replayReview.reviewId === review._id
+                          )
+                          ?.map((replayReview: TReplayReview) => (
+                            <div
+                              key={replayReview?._id}
+                              className="flex justify-start items-center text-slate-200 mb-4"
+                            >
+                              <div className="flex justify-start items-start mr-2">
+                                <img
+                                  src={replayReview?.ratingUserImg}
+                                  className="h-10 w-10 rounded-full mr-2"
+                                  alt=""
+                                />
+                                <div>
+                                  <div className="bg-[#2b3747de] p-2 rounded-tr-3xl rounded-bl-3xl rounded-br-3xl min-w-48 max-w-96">
+                                    <div>
+                                      <p className="leading-3 font-semibold text-base">
+                                        {replayReview?.ratingUserName}
+                                      </p>
+                                      <p className="text-slate-200 text-sm ">
+                                        {formatDate(
+                                          replayReview?.reviewAddDate
+                                        )}
+                                      </p>
+                                    </div>
+                                    <div>
+                                      {replayReview?.replayReviewMessage}
+                                    </div>
+                                  </div>
+                                  <div className="flex justify-between items-center px-2">
+                                    <div>
+                                      {likeReviewHandler(replayReview._id)
+                                        .liked ? (
+                                        <button
+                                          onClick={() =>
+                                            likeDeleteHandler(
+                                              likeReviewHandler(
+                                                replayReview._id
+                                              ).likedId || "",
+                                              replayReview?._id
+                                            )
+                                          }
+                                          className="mr-5 text-blue-500"
+                                        >
+                                          Unlike
+                                        </button>
+                                      ) : (
+                                        <button
+                                          onClick={() =>
+                                            likeHandler(replayReview._id)
+                                          }
+                                          className="mr-5"
+                                        >
+                                          Like
+                                        </button>
+                                      )}
+                                      <button>
+                                        {/* <ReviewReplayModal
+                                review={replayReview}
+                                productId={product?.data?._id}
+                              /> */}
+                                        Replay
+                                      </button>
+                                    </div>
+                                    <button>
+                                      <span>{replayReview?.likeTotal}</span>
+                                      👍<span className="-m-3">❤</span>😊
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="">
+                                <div className="dropdown -top-3">
+                                  <div tabIndex={0} role="button" className="">
+                                    <div className="">
+                                      <button className="btn btn-sm btn-square bg-[#2b3747de] text-slate-200 hover:bg-[#2b3747de]">
+                                        <svg
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          fill="none"
+                                          viewBox="0 0 24 24"
+                                          className="inline-block h-5 w-5 stroke-current"
+                                        >
+                                          <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth="2"
+                                            d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"
+                                          ></path>
+                                        </svg>
+                                      </button>
+                                    </div>
+                                  </div>
+                                  <ul
+                                    tabIndex={0}
+                                    className="menu menu-sm text-gray-800 dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-40 p-2 shadow"
+                                  >
+                                    <li>
+                                      <ReviewUpdateModal
+                                        id={replayReview?._id}
+                                      />
+                                    </li>
+                                    <li
+                                      onClick={() =>
+                                        deleteReviewHandler(replayReview?._id)
+                                      }
+                                    >
+                                      <a>Delete</a>
+                                    </li>
+                                  </ul>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                      </div>
+                    </div>
+                  ))}
+                </>
+              )}
+            </div>
+
+            {/* <div className="">
+              {replayReviews?.data?.length === 0 ? (
+                <>
+                  <div>
+                    <p className="text-base text-[#76AE42] text-semibold  ">
+                      Product Review not available..!
+                    </p>
+                  </div>
+                </>
+              ) : (
+                <>
+                  
+                </>
+              )}
+            </div> */}
           </div>
         </div>
       </div>

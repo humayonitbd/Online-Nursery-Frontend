@@ -61,7 +61,7 @@ const baseQueryWithRefreshToken: BaseQueryFn<
           credentials: "include",
         }
       );
-
+        console.log('res refresh api', res)
       const data = await res.json();
       if (data?.data?.accessToken) {
         const user = (api.getState() as RootState).auth.user;
@@ -84,6 +84,6 @@ const baseQueryWithRefreshToken: BaseQueryFn<
 export const baseApi = createApi({
   reducerPath: "baseApi",
   baseQuery: baseQueryWithRefreshToken,
-  tagTypes: ["category", "product", 'orderProduct', 'reviews', 'reviewsLike'],
+  tagTypes: ["category", "product", 'orderProduct', 'reviews', 'reviewsLike','replayReview'],
   endpoints: () => ({}),
 });

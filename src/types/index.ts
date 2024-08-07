@@ -87,3 +87,15 @@ export type TReviewLike = {
   like: boolean;
   __v: number;
 };
+
+export type TReplayReview = {
+  _id: string;
+  replayReviewMessage: string;
+  productId: string;
+  reviewId: string;
+  reviewAddDate: string;
+  ratingUserName: string;
+  ratingUserImg: string;
+  likeTotal: number;
+  __v: number;
+};

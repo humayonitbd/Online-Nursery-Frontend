@@ -64,12 +64,46 @@ const reviewApi = baseApi.injectEndpoints({
       providesTags: ["reviewsLike"],
     }),
 
-    deleteReviewLike: builder.mutation({
-      query: () => ({
-        url: `/product-review/like`,
+    deleteUpdateReviewLike: builder.mutation({
+      query: ({ id, deleteData }) => ({
+        url: `/product-review/like/${id}`,
+        method: "PUT",
+        body: deleteData,
+      }),
+      invalidatesTags: ["reviewsLike", "reviews"],
+    }),
+    /// replay review api handle start
+    addReplayReview: builder.mutation({
+      query: (data) => ({
+        url: "/product-review/add-replay-review",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["replayReview"],
+    }),
+
+    getReplayReview: builder.query({
+      query: (id) => ({
+        url: `/product-review/replay-review?productId=${id}`,
+        method: "GET",
+      }),
+      providesTags: ["replayReview"],
+    }),
+
+    updateReplayReview: builder.mutation({
+      query: ({ id, data }) => ({
+        url: `/product-review/replay-review/${id}`,
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: ["replayReview"],
+    }),
+    deleteReplayReview: builder.mutation({
+      query: (id) => ({
+        url: `/product-review/replay-review/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["reviewsLike"],
+      invalidatesTags: ["replayReview"],
     }),
   }),
 });

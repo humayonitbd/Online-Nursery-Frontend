@@ -68,8 +68,20 @@ const Register = () => {
 
         // Add your API call here to save the user data
         const res:any = await registerHandler(userData);
-        console.log("register res", res);
-        if(!res?.error?.data?.success){
+        // console.log("register res", res);
+        if(res?.data?.success){
+            setRegisterLoading(false);
+             Swal.fire({
+               icon: "success",
+               title: `${res?.data?.message}`,
+               showConfirmButton: false,
+               timer: 1000,
+             });
+             reset();
+             navigate("/login");
+            
+            
+        }else{
             setRegisterLoading(false);
             Swal.fire({
               icon: "error",
@@ -77,17 +89,6 @@ const Register = () => {
               showConfirmButton: false,
               timer: 1200,
             });
-            
-        }else{
-            setRegisterLoading(false);
-            Swal.fire({
-              icon: "success",
-              title: `${res?.data?.message}`,
-              showConfirmButton: false,
-              timer: 1000,
-            });
-            reset();
-            navigate("/login");
         }
         
       } else {
