@@ -96,6 +96,7 @@ export type TReplayReview = {
   reviewId: string;
   reviewAddDate: string;
   ratingUserName: string;
+  replayReviewUserEmail:string;
   ratingUserImg: string;
   likeTotal: number;
   __v: number;

@@ -91,10 +91,10 @@ const reviewApi = baseApi.injectEndpoints({
     }),
 
     updateReplayReview: builder.mutation({
-      query: ({ id, data }) => ({
+      query: ({ id, replayReviewUpdateData }) => ({
         url: `/product-review/replay-review/${id}`,
         method: "PUT",
-        body: data,
+        body: replayReviewUpdateData,
       }),
       invalidatesTags: ["replayReview"],
     }),

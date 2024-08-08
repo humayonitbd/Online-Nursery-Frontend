@@ -2,7 +2,6 @@ import { Button } from '@/components/ui/button';
 import productApi from '@/redux/features/product/productApi';
 import { useNavigate, useParams } from 'react-router-dom';
 import SmallLoading from '../SharedPage/Loading/SmallLoading';
-import userApi from '@/redux/features/users/usersApi';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { Plus, Star, StarIcon } from 'lucide-react';
 import Swal from 'sweetalert2';
@@ -13,6 +12,7 @@ import { ReviewUpdateModal } from '@/components/ReviewUpdateModal/ReviewUpdateMo
 import { addBookingProduct } from '@/redux/features/bookingProduct/bookingProductSlice';
 import { ReviewReplayModal } from '@/components/ReviewReplayModal/ReviewReplayModal';
 import { notUserFn, notUserReviewMessage } from '@/utils/notUserFn';
+import { ReplayReviewUpdate } from '@/components/ReplayReviewUpdate/ReplayReviewUpdate';
 
 
 
@@ -39,6 +39,7 @@ const ProductDetails = () => {
         skip: reviewLoading,
       });
       const [deleteUpdateReviewLike] = reviewApi.useDeleteUpdateReviewLikeMutation();
+       const [deleteReplayReview] = reviewApi.useDeleteReplayReviewMutation();
       
 
  const renderStars = (rating: number) => {
@@ -99,6 +100,37 @@ const deleteReviewHandler = async(id:string)=>{
   }
 
 }
+const deleteReplayReviewHandler = async (id: string) => {
+  try {
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    });
+
+    if (result.isConfirmed) {
+      const res = await deleteReplayReview(id).unwrap();
+      if (res.success) {
+        Swal.fire({
+          title: "Deleted!",
+          text: "Your Comment has been deleted.",
+          icon: "success",
+        });
+      }
+    }
+  } catch (error) {
+    console.log(error);
+    Swal.fire({
+      title: "Error!",
+      text: "Failed to delete the Comment.",
+      icon: "error",
+    });
+  }
+};
 
 
     const notUserReviewHandler=()=>{
@@ -426,9 +458,7 @@ const deleteReviewHandler = async(id:string)=>{
                                   ) : (
                                     <>
                                       <li
-                                        onClick={() =>
-                                          notUserReviewMessage()
-                                        }
+                                        onClick={() => notUserReviewMessage()}
                                       >
                                         <a>Delete</a>
                                       </li>
@@ -446,117 +476,7 @@ const deleteReviewHandler = async(id:string)=>{
                           </div>
                         </div>
                       </div>
-                      {/* <div>
-                        {replayReviews?.data?.map((replayReview: TReplayReview,replayReview.reviewId === review._id ) => (<div
-                              key={replayReview?._id}
-                              className="flex justify-start items-center  text-slate-200 mb-4"
-                            >
-                              <div className="flex justify-start items-start mr-2">
-                                <img
-                                  src={replayReview?.ratingUserImg}
-                                  className="h-10 w-10 rounded-full mr-2"
-                                  alt=""
-                                />
-                                <div>
-                                  <div className="bg-[#2b3747de] p-2 rounded-tr-3xl rounded-bl-3xl rounded-br-3xl min-w-48 max-w-96">
-                                    <div>
-                                      <p className="leading-3 font-semibold text-base">
-                                        {replayReview?.ratingUserName}
-                                      </p>
-                                      <p className="text-slate-200 text-sm ">
-                                        {formatDate(
-                                          replayReview?.reviewAddDate
-                                        )}
-                                      </p>
-                                    </div>
-                                    <div>
-                                      {replayReview?.replayReviewMessage}
-                                    </div>
-                                  </div>
-                                  <div className="flex justify-between items-center px-2">
-                                    <div>
-                                      {likeReviewHandler(replayReview._id)
-                                        .liked ? (
-                                        <button
-                                          onClick={() =>
-                                            likeDeleteHandler(
-                                              likeReviewHandler(
-                                                replayReview._id
-                                              ).likedId || "",
-                                              replayReview?._id
-                                            )
-                                          }
-                                          className="mr-5 text-blue-500"
-                                        >
-                                          Unlike
-                                        </button>
-                                      ) : (
-                                        <button
-                                          onClick={() =>
-                                            likeHandler(replayReview._id)
-                                          }
-                                          className="mr-5"
-                                        >
-                                          Like
-                                        </button>
-                                      )}
-                                      <button>
-                                        <ReviewReplayModal
-                                          review={replayReview}
-                                          productId={product?.data?._id}
-                                        />
-                                      </button>
-                                    </div>
-
-                                    <button>
-                                      <span>{replayReview?.likeTotal}</span>
-                                      👍<span className="-m-3">❤</span>😊
-                                    </button>
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="">
-                                <div className="dropdown -top-3">
-                                  <div tabIndex={0} role="button" className="">
-                                    <div className="">
-                                      <button className=" btn btn-sm btn-square bg-[#2b3747de] text-slate-200 hover:bg-[#2b3747de] ">
-                                        <svg
-                                          xmlns="http://www.w3.org/2000/svg"
-                                          fill="none"
-                                          viewBox="0 0 24 24"
-                                          className="inline-block h-5 w-5 stroke-current"
-                                        >
-                                          <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth="2"
-                                            d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"
-                                          ></path>
-                                        </svg>
-                                      </button>
-                                    </div>
-                                  </div>
-                                  <ul
-                                    tabIndex={0}
-                                    className="menu menu-sm text-gray-800 dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-40 p-2 shadow"
-                                  >
-                                    <li>
-                                      <ReviewUpdateModal
-                                        id={replayReview?._id}
-                                      />
-                                    </li>
-                                    <li
-                                      onClick={() =>
-                                        deleteReviewHandler(replayReview?._id)
-                                      }
-                                    >
-                                      <a>Delete</a>
-                                    </li>
-                                  </ul>
-                                </div>
-                              </div>
-                            </div>) )}
-                      </div> */}
+                      
                       <div className="ml-14">
                         {replayReviews?.data
                           ?.filter(
@@ -657,22 +577,78 @@ const deleteReviewHandler = async(id:string)=>{
                                       </button>
                                     </div>
                                   </div>
+                                  
                                   <ul
                                     tabIndex={0}
                                     className="menu menu-sm text-gray-800 dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-40 p-2 shadow"
                                   >
                                     <li>
-                                      <ReviewUpdateModal
-                                        id={replayReview?._id}
-                                      />
+                                      {user && user?.email ? (
+                                        <>
+                                          {replayReview?.replayReviewUserEmail ===
+                                          user?.email ? (
+                                            <>
+                                              <ReplayReviewUpdate
+                                                id={replayReview?._id}
+                                                message={
+                                                  replayReview.replayReviewMessage
+                                                }
+                                              />
+                                            </>
+                                          ) : (
+                                            <>
+                                              <a
+                                                onClick={() =>
+                                                  notUserReviewMessage()
+                                                }
+                                              >
+                                                Edit
+                                              </a>
+                                            </>
+                                          )}
+                                        </>
+                                      ) : (
+                                        <>
+                                          <a onClick={() => notUserFn(user)}>
+                                            Edit
+                                          </a>
+                                        </>
+                                      )}
                                     </li>
-                                    <li
-                                      onClick={() =>
-                                        deleteReviewHandler(replayReview?._id)
-                                      }
-                                    >
-                                      <a>Delete</a>
-                                    </li>
+                                    {user && user?.email ? (
+                                      <>
+                                        {replayReview?.replayReviewUserEmail ===
+                                        user?.email ? (
+                                          <>
+                                            <li
+                                              onClick={() =>
+                                                deleteReplayReviewHandler(
+                                                  replayReview?._id
+                                                )
+                                              }
+                                            >
+                                              <a>Delete</a>
+                                            </li>
+                                          </>
+                                        ) : (
+                                          <>
+                                            <li
+                                              onClick={() =>
+                                                notUserReviewMessage()
+                                              }
+                                            >
+                                              <a>Delete</a>
+                                            </li>
+                                          </>
+                                        )}
+                                      </>
+                                    ) : (
+                                      <>
+                                        <li onClick={() => notUserFn(user)}>
+                                          <a>Delete</a>
+                                        </li>
+                                      </>
+                                    )}
                                   </ul>
                                 </div>
                               </div>

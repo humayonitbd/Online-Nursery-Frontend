@@ -9,58 +9,56 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { FieldValues, useForm } from "react-hook-form";
-import { useState } from "react";
-import { useAppSelector } from "@/redux/hooks";
+import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
-import { TReplayReview, TResponse, TReview } from "@/types";
+import { TResponse, TReview } from "@/types";
 import reviewApi from "@/redux/features/review/reviewApi";
-import userApi from "@/redux/features/users/usersApi";
 
-export function ReviewReplayModal({
-  review,
-  productId,
-}: {
-  review: TReview;
-  productId:string;
-}) {
-  const [reviewAddLoading, setReviewAddLoading] = useState(false);
-  const user = useAppSelector((state) => state.auth.user);
-  const { register, handleSubmit, reset } = useForm();
+export function ReplayReviewUpdate({ id, message }: { id: string; message: string }) {
+  const [updateLoading, setUpdateLoading] = useState(false);
+  //   const { data: singleReview } = reviewApi.useSingleGetReviewQuery(id);
+  const { register, handleSubmit, reset } = useForm({
+    defaultValues: {
+      replayReviewMessage: "",
+    },
+  });
+
+  const [updateReplayReview] = reviewApi.useUpdateReplayReviewMutation();
   const [isOpen, setIsOpen] = useState(false);
-  const [addReplayReview] = reviewApi.useAddReplayReviewMutation();
-  const { data } = userApi.useGetUserQuery(user?.email);
-  const userData = data?.data;
 
-  const reviewDate = new Date();
+  useEffect(() => {
+    if (message) {
+      reset({
+        replayReviewMessage: message,
+      });
+    }
+  }, [message, reset]);
 
   const onSubmit = async (data: FieldValues) => {
-    setReviewAddLoading(true);
-    
+    setUpdateLoading(true);
     try {
-      const reviewData = {
+      const replayReviewUpdateData = {
         ...data,
-        productId: productId,
-        reviewId: review?._id,
-        reviewAddDate: reviewDate,
-        ratingUserName: userData.name,
-        replayReviewUserEmail: userData.email,
-        ratingUserImg: userData.profileImg,
       };
-      const res: TResponse<TReplayReview> = await addReplayReview(
-        reviewData
-      ).unwrap();
+
+      const res: TResponse<TReview> = await updateReplayReview({
+        id,
+        replayReviewUpdateData,
+      }).unwrap();
+      // console.log("reviewUpdateData", res);
       if (res?.success) {
-        setReviewAddLoading(false);
+        setUpdateLoading(false);
         Swal.fire({
           icon: "success",
           title: `${res.message}`,
           showConfirmButton: false,
           timer: 1200,
         });
+
         reset();
         setIsOpen(false);
       } else {
-        setReviewAddLoading(false);
+        setUpdateLoading(false);
         Swal.fire({
           icon: "error",
           title: `${res?.error?.data?.message}`,
@@ -70,7 +68,7 @@ export function ReviewReplayModal({
         setIsOpen(false);
       }
     } catch (error: any) {
-      setReviewAddLoading(false);
+      setUpdateLoading(false);
       if (error?.data) {
         Swal.fire({
           icon: "error",
@@ -87,14 +85,13 @@ export function ReviewReplayModal({
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <button>Replay</button>
+        <a>Edit</a>
       </DialogTrigger>
       <DialogContent className="bg-gray-800 text-white border-0">
         <DialogHeader>
-          <DialogTitle className="text-center text-3xl font-bold text-[#AFD136]">
-            Replay Message!
+          <DialogTitle className="text-center text-2xl font-bold text-[#AFD136]">
+            Update Replay Review Comments
           </DialogTitle>
-          <h1 className="text-center text-xl ">{review?.reviewMessage}</h1>
         </DialogHeader>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="grid gap-4 py-4 text-gray-900">
@@ -109,7 +106,7 @@ export function ReviewReplayModal({
 
           <DialogFooter>
             <Button color="yellow" type="submit" className="w-full">
-              {reviewAddLoading && (
+              {updateLoading && (
                 <span className="loading loading-spinner mr-2"></span>
               )}
               Submit
