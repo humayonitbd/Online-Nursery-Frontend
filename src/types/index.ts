@@ -75,8 +75,9 @@ export type TReview = {
   productId: string;
   reviewAddDate: string;
   ratingUserName: string;
+  reviewUserEmail:string;
   ratingUserImg: string;
-  likeTotal:number;
+  likeTotal: number;
   __v: number;
 };
 

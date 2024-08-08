@@ -12,6 +12,8 @@ import { TProduct, TReplayReview, TReview, TReviewLike } from '@/types';
 import { ReviewUpdateModal } from '@/components/ReviewUpdateModal/ReviewUpdateModal';
 import { addBookingProduct } from '@/redux/features/bookingProduct/bookingProductSlice';
 import { ReviewReplayModal } from '@/components/ReviewReplayModal/ReviewReplayModal';
+import { notUserFn, notUserReviewMessage } from '@/utils/notUserFn';
+
 
 
 export type TLikeReviewResult ={
@@ -37,6 +39,7 @@ const ProductDetails = () => {
         skip: reviewLoading,
       });
       const [deleteUpdateReviewLike] = reviewApi.useDeleteUpdateReviewLikeMutation();
+      
 
  const renderStars = (rating: number) => {
    const stars = [];
@@ -133,6 +136,14 @@ const deleteReviewHandler = async(id:string)=>{
     };
 
   const likeHandler =async(id:string)=>{
+    if (!user?.email) {
+      return Swal.fire({
+        icon: "error",
+        title: `You don't login user!! Please login!`,
+        showConfirmButton: false,
+        timer: 1200,
+      });
+    }
     const data = {
       email: user?.email,
       like: true,
@@ -378,13 +389,59 @@ const deleteReviewHandler = async(id:string)=>{
                               className="menu menu-sm text-gray-800 dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-40 p-2 shadow"
                             >
                               <li>
-                                <ReviewUpdateModal id={review?._id} />
+                                {user && user?.email ? (
+                                  <>
+                                    {review?.reviewUserEmail === user?.email ? (
+                                      <>
+                                        <ReviewUpdateModal id={review?._id} />
+                                      </>
+                                    ) : (
+                                      <>
+                                        <a
+                                          onClick={() => notUserReviewMessage()}
+                                        >
+                                          Edit
+                                        </a>
+                                      </>
+                                    )}
+                                  </>
+                                ) : (
+                                  <>
+                                    <a onClick={() => notUserFn(user)}>Edit</a>
+                                  </>
+                                )}
                               </li>
-                              <li
-                                onClick={() => deleteReviewHandler(review?._id)}
-                              >
-                                <a>Delete</a>
-                              </li>
+                              {user && user?.email ? (
+                                <>
+                                  {review?.reviewUserEmail === user?.email ? (
+                                    <>
+                                      <li
+                                        onClick={() =>
+                                          deleteReviewHandler(review?._id)
+                                        }
+                                      >
+                                        <a>Delete</a>
+                                      </li>
+                                    </>
+                                  ) : (
+                                    <>
+                                      <li
+                                        onClick={() =>
+                                          notUserReviewMessage()
+                                        }
+                                      >
+                                        <a>Delete</a>
+                                      </li>
+                                    </>
+                                  )}
+                                </>
+                              ) : (
+                                <>
+                                  <li onClick={() => notUserFn(user)}>
+                                    <a>Delete</a>
+                                  </li>
+                                </>
+                              )}
                             </ul>
                           </div>
                         </div>
@@ -500,7 +557,7 @@ const deleteReviewHandler = async(id:string)=>{
                               </div>
                             </div>) )}
                       </div> */}
-                      <div className='ml-14'>
+                      <div className="ml-14">
                         {replayReviews?.data
                           ?.filter(
                             (replayReview: TReplayReview) =>
@@ -534,7 +591,7 @@ const deleteReviewHandler = async(id:string)=>{
                                     </div>
                                   </div>
                                   <div className="flex justify-between items-center px-2">
-                                    <div>
+                                    {/* <div>
                                       {likeReviewHandler(replayReview._id)
                                         .liked ? (
                                         <button
@@ -561,12 +618,16 @@ const deleteReviewHandler = async(id:string)=>{
                                         </button>
                                       )}
                                       <button>
-                                        {/* <ReviewReplayModal
+                                        <ReviewReplayModal
                                 review={replayReview}
                                 productId={product?.data?._id}
-                              /> */}
+                              />
                                         Replay
                                       </button>
+                                    </div> */}
+                                    <div>
+                                      <button className="mr-5">Like</button>
+                                      <button>Replay</button>
                                     </div>
                                     <button>
                                       <span>{replayReview?.likeTotal}</span>
@@ -623,22 +684,6 @@ const deleteReviewHandler = async(id:string)=>{
                 </>
               )}
             </div>
-
-            {/* <div className="">
-              {replayReviews?.data?.length === 0 ? (
-                <>
-                  <div>
-                    <p className="text-base text-[#76AE42] text-semibold  ">
-                      Product Review not available..!
-                    </p>
-                  </div>
-                </>
-              ) : (
-                <>
-                  
-                </>
-              )}
-            </div> */}
           </div>
         </div>
       </div>

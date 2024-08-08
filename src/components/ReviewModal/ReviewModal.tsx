@@ -50,7 +50,8 @@ export function ReviewModal({ product }: { product: TProduct }) {
         productId: product?._id,
         reviewAddDate: reviewDate,
         ratingUserName: userData.name,
-        ratingUserImg:userData.profileImg,
+        reviewUserEmail: userData.email,
+        ratingUserImg: userData.profileImg,
       };
       const res: TResponse<TReview> = await addReview(reviewData).unwrap();
       if(res?.success){

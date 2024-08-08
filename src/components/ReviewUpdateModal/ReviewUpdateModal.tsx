@@ -47,7 +47,7 @@ export function ReviewUpdateModal({ id }: { id: string }) {
         id,
         reviewUpdateData,
       }).unwrap();
-      console.log("reviewUpdateData", res);
+      // console.log("reviewUpdateData", res);
       if (res?.success) {
          setUpdateLoading(false);
         Swal.fire({

@@ -9,6 +9,7 @@ import {
 import { RootState } from "../store";
 import Swal from "sweetalert2";
 import { logOut, setUser } from "../features/auth/authSlice";
+import { verifyToken } from "@/utils/verifyToken";
 
 interface ErrorResponse {
   status: number;
@@ -65,6 +66,9 @@ const baseQueryWithRefreshToken: BaseQueryFn<
       const data = await res.json();
       if (data?.data?.accessToken) {
         const user = (api.getState() as RootState).auth.user;
+        // const user = verifyToken(data?.data?.accessToken);
+        // console.log('user refresh api', user);
+        // console.log("user refresh api", data?.data?.accessToken);
         api.dispatch(setUser({ user, token: data.data.accessToken }));
         // Retry the original query with the new token
         result = await baseQuery(args, api, extraOptions);
