@@ -1,6 +1,6 @@
 
 import { baseApi } from "@/redux/api/baseApi";
-import { QueryParams, TProduct, TResponseRedux } from "@/types";
+import { TProduct, TResponseRedux } from "@/types";
 
 const productApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -12,17 +12,7 @@ const productApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["product"],
     }),
-    // getAllProduct: builder.query({
-    //   query: (categoryName) => {
-    //     console.log('categoryName', categoryName)
-    //     console.log(`{/product?category=${categoryName}}`)
-    //     return {
-    //       url: `/product?category=${categoryName}`,
-    //       method: "GET",
-    //     };
-    //   },
-    //   providesTags: ["product"],
-    // }),
+    
     getAllProduct: builder.query({
       query: (queryParams) => {
         let url = "/product";

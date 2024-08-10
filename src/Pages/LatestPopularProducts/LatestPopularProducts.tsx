@@ -19,7 +19,7 @@ const LatestPopularProducts = () => {
         </div>
         <div>
           <div>
-            {products?.data.length === 0 ? (
+            {products?.data?.length === 0 ? (
               <>
                 <div className="h-52 flex justify-center items-center text-2xl font-semibold text-[#76AE42]">
                   <h2>Products is not Available!!</h2>

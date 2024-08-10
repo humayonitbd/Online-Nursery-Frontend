@@ -45,7 +45,11 @@ const router = createBrowserRouter([
       },
       {
         path: "product/add-to-cart-list/payment/:id",
-        element: <ProductPayment />,
+        element: (
+          <PrivetRoute>
+            <ProductPayment />
+          </PrivetRoute>
+        ),
       },
       {
         path: "product-category-management",
